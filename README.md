@@ -7,7 +7,7 @@ A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.
 ## Linux
 
 1. Install the [VitaSDK](https://vitasdk.org/)
-2. Install the LibXMP vita library port
+2. Install the LibXMP vita library [port](https://github.com/JetStreamSham/libxmp). See the [porting libraries](https://vitasdk.org/) section for installtion instructions.
 3. Generate makefile with cmake .
 4. Compile with `make`.
 
