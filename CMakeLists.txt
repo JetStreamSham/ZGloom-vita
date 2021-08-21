@@ -26,6 +26,8 @@ add_executable(${PROJECT_NAME}
 	src/zgloom.cpp
 #	src/logger.h
 #	src/logger.cpp
+	src/input.h
+	src/input.cpp
 	src/script.h
 	src/script.cpp
 	src/monsterlogic.h

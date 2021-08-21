@@ -7,7 +7,7 @@
 #include "gloommap.h"
 #include "font.h"
 #include "objectgraphics.h"
-
+#include "input.h"
 class Hud
 {
 	public:
