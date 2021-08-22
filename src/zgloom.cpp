@@ -390,7 +390,7 @@ int main(int argc, char *argv[])
 
 					SDL_SetPaletteColors(render8->format->palette, smallfont.GetPalette()->colors, 0, 16);
 					SDL_BlitSurface(intermissionscreen, NULL, render8, NULL);
-					smallfont.PrintMultiLineMessage(intermissiontext, 220, render8);
+					smallfont.PrintMultiLineMessage(intermissiontext, 245, render8); // moved level text to black bar from 220 to 245, so whole height is used
 				}
 				break;
 			}
