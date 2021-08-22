@@ -732,6 +732,15 @@ bool GameLogic::Update(Camera *cam)
 		bool controlstraferight = Input::GetButton(Config::GetKey(Config::KEY_SRIGHT));
 		bool controlstrafemod = Input::GetButton(Config::GetKey(Config::KEY_STRAFEMOD));
 
+// fixes missing right analog stick after deleting touchpad support
+		Input::Stick rightStick = Input::GetRightStick();
+
+		if (rightStick.x < 125 - Config::GetRightStickDeadzone())
+			controlleft = true;
+		if (rightStick.x > 125 + Config::GetRightStickDeadzone())
+			controlright = true;
+//
+
 		Input::Stick leftStick = Input::GetLeftStick();
 			
 		if (leftStick.x < 125 - Config::GetLeftStickDeadzone())
