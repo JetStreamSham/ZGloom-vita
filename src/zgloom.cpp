@@ -1,9 +1,9 @@
 // zgloom.cpp : Defines the entry point for the console application.
 //
+#include <psp2/ctrl.h>
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/kernel/processmgr.h>
 #include <stdio.h>
-
 #include <xmp.h>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -23,12 +23,6 @@
 #include "menuscreen.h"
 #include "hud.h"
 
-
-
-
-
-
-
 Uint32 my_callbackfunc(Uint32 interval, void *param)
 {
 	SDL_Event event;
@@ -47,7 +41,7 @@ Uint32 my_callbackfunc(Uint32 interval, void *param)
 	event.user = userevent;
 
 	SDL_PushEvent(&event);
-	return(interval);
+	return (interval);
 }
 
 static void fill_audio(void *udata, Uint8 *stream, int len)
@@ -55,14 +49,14 @@ static void fill_audio(void *udata, Uint8 *stream, int len)
 	auto res = xmp_play_buffer((xmp_context)udata, stream, len, 0);
 }
 
-void LoadPic(std::string name, SDL_Surface* render8)
+void LoadPic(std::string name, SDL_Surface *render8)
 {
 	std::vector<uint8_t> pic;
 	CrmFile picfile;
 	CrmFile palfile;
 
 	picfile.Load(name.c_str());
-	palfile.Load((name+".pal").c_str());
+	palfile.Load((name + ".pal").c_str());
 
 	SDL_FillRect(render8, nullptr, 0);
 
@@ -97,7 +91,7 @@ void LoadPic(std::string name, SDL_Surface* render8)
 		{
 			pic.resize(render8->w * render8->h);
 		}
-		std::copy(pic.begin(), pic.begin() + pic.size(), (uint8_t*)(render8->pixels));
+		std::copy(pic.begin(), pic.begin() + pic.size(), (uint8_t *)(render8->pixels));
 	}
 	else
 	{
@@ -113,7 +107,7 @@ void LoadPic(std::string name, SDL_Surface* render8)
 
 		while (p < pic.size())
 		{
-			std::copy(pic.begin() + p, pic.begin() + p + render8->w, (uint8_t*)(render8->pixels) + y*render8->pitch);
+			std::copy(pic.begin() + p, pic.begin() + p + render8->w, (uint8_t *)(render8->pixels) + y * render8->pitch);
 
 			p += width;
 			y++;
@@ -131,32 +125,28 @@ enum GameState
 	STATE_TITLE
 };
 
-int main(int argc, char* argv[])
+int main(int argc, char *argv[])
 {
-	FILE* dbgFile = fopen("ux0:/data/zgloom/debug.txt","w");
+	FILE *dbgFile = fopen("ux0:/data/zgloom/debug.txt", "w");
 	/* AUTODETECT ZM FIRST!*/
-	if (FILE* file = fopen("ux0:/data/zgloom/stuf/stages", "r"))
+	if (FILE *file = fopen("ux0:/data/zgloom/stuf/stages", "r"))
 	{
-		fputs("detected ZM",dbgFile);
+		fputs("detected ZM", dbgFile);
 		fclose(file);
 		Config::SetZM(true);
 	}
 	
-
-
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 	{
-		fputs("SDL_Init Error: ",dbgFile);
-		fputs(SDL_GetError(),dbgFile);
-		fputs("\n",dbgFile);
+		fputs("SDL_Init Error: ", dbgFile);
+		fputs(SDL_GetError(), dbgFile);
+		fputs("\n", dbgFile);
 		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
 		return 1;
 	}
 
-
 	// SDL needs to be inited before this to pick up gamepad
 	Config::Init();
-
 
 	GloomMap gmap;
 	Script script;
@@ -178,14 +168,13 @@ int main(int argc, char* argv[])
 	CrmFile ingamemusic;
 	CrmFile titlepic;
 
-
 	titlemusic.Load(Config::GetMusicFilename(0).c_str());
 	intermissionmusic.Load(Config::GetMusicFilename(1).c_str());
 
-	
-	SoundHandler::Init();
 
-	SDL_Window* win = SDL_CreateWindow("ZGloom", 100, 100, windowwidth, windowheight, SDL_WINDOW_SHOWN | (Config::GetFullscreen()?SDL_WINDOW_FULLSCREEN:0) );
+	SoundHandler::Init(); 
+	
+	SDL_Window *win = SDL_CreateWindow("ZGloom", 100, 100, windowwidth, windowheight, SDL_WINDOW_SHOWN | (Config::GetFullscreen() ? SDL_WINDOW_FULLSCREEN : 0));
 	if (win == nullptr)
 	{
 		std::cout << "SDL_CreateWindow Error: " << SDL_GetError() << std::endl;
@@ -194,14 +183,14 @@ int main(int argc, char* argv[])
 
 	Config::RegisterWin(win);
 
-	SDL_Renderer* ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | (Config::GetVSync()?SDL_RENDERER_PRESENTVSYNC:0));
+	SDL_Renderer *ren = SDL_CreateRenderer(win, -1, SDL_RENDERER_ACCELERATED | (Config::GetVSync() ? SDL_RENDERER_PRESENTVSYNC : 0));
 	if (ren == nullptr)
 	{
 		std::cout << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
 		return 1;
 	}
 
-	SDL_Texture* rendertex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, renderwidth, renderheight);
+	SDL_Texture *rendertex = SDL_CreateTexture(ren, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, renderwidth, renderheight);
 	if (rendertex == nullptr)
 	{
 		std::cout << "SDL_CreateTexture Error: " << SDL_GetError() << std::endl;
@@ -210,11 +199,11 @@ int main(int argc, char* argv[])
 
 	SDL_ShowCursor(SDL_DISABLE);
 
-	SDL_Surface* render8 = SDL_CreateRGBSurface(0, 320, 256, 8, 0, 0, 0, 0);
-	SDL_Surface* intermissionscreen = SDL_CreateRGBSurface(0, 320, 256, 8, 0, 0, 0, 0);
-	SDL_Surface* titlebitmap = SDL_CreateRGBSurface(0, 320, 256, 8, 0, 0, 0, 0);
-	SDL_Surface* render32 = SDL_CreateRGBSurface(0, renderwidth, renderheight, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
-	SDL_Surface* screen32 = SDL_CreateRGBSurface(0, 320, 256, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	SDL_Surface *render8 = SDL_CreateRGBSurface(0, 320, 256, 8, 0, 0, 0, 0);
+	SDL_Surface *intermissionscreen = SDL_CreateRGBSurface(0, 320, 256, 8, 0, 0, 0, 0);
+	SDL_Surface *titlebitmap = SDL_CreateRGBSurface(0, 320, 256, 8, 0, 0, 0, 0);
+	SDL_Surface *render32 = SDL_CreateRGBSurface(0, renderwidth, renderheight, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
+	SDL_Surface *screen32 = SDL_CreateRGBSurface(0, 320, 256, 32, 0x00FF0000, 0x0000FF00, 0x000000FF, 0xFF000000);
 
 	ObjectGraphics objgraphics;
 	Renderer renderer;
@@ -229,7 +218,6 @@ int main(int argc, char* argv[])
 
 	bool notdone = true;
 
-
 #if 1
 	Font smallfont, bigfont;
 	CrmFile fontfile;
@@ -242,15 +230,16 @@ int main(int argc, char* argv[])
 	else
 	{
 		fontfile.Load((Config::GetMiscDir() + "smallfont.bin").c_str());
-		if (fontfile.data)smallfont.Load(fontfile);
+		if (fontfile.data)
+			smallfont.Load(fontfile);
 		fontfile.Load((Config::GetMiscDir() + "bigfont.bin").c_str());
-		if (fontfile.data)bigfont.Load(fontfile);
+		if (fontfile.data)
+			bigfont.Load(fontfile);
 	}
 #endif
 
 	titlepic.Load((Config::GetPicsDir() + "title").c_str());
 
-	
 	if (titlepic.data)
 	{
 		LoadPic(Config::GetPicsDir() + "title", titlebitmap);
@@ -309,8 +298,14 @@ int main(int argc, char* argv[])
 	titlescreen.SetLevels(levelnames);
 	int levelselect = 0;
 
+	sceCtrlSetSamplingMode(SCE_CTRL_MODE_ANALOG);
+	SceCtrlData inputData;
+
+	Input::Init();
 	while (notdone)
 	{
+		sceCtrlPeekBufferPositive(0, &inputData, 1);
+
 		if ((state == STATE_PARSING) || (state == STATE_SPOOLING))
 		{
 			std::string scriptstring;
@@ -472,8 +467,10 @@ int main(int argc, char* argv[])
 			titlescreen.Render(titlebitmap, render8, smallfont);
 		}
 
-		while ((state!= STATE_SPOOLING) && SDL_PollEvent(&sEvent))
+		while ((state != STATE_SPOOLING) && SDL_PollEvent(&sEvent))
 		{
+			Input::Update();
+
 			if (sEvent.type == SDL_WINDOWEVENT)
 			{
 				if (sEvent.window.event == SDL_WINDOWEVENT_CLOSE)
@@ -482,48 +479,7 @@ int main(int argc, char* argv[])
 				}
 			}
 
-			if (Config::HaveController() && (sEvent.type == SDL_CONTROLLERBUTTONDOWN))
-			{
-				//fake up a key event
-				if ((state == STATE_TITLE) || (state == STATE_MENU) || (state == STATE_WAITING))
-				{
-					if (Config::GetControllerFire())
-					{
-						sEvent.type = SDL_KEYDOWN;
-						sEvent.key.keysym.sym = SDLK_SPACE;
-					}
-					if (Config::GetControllerUp())
-					{
-						sEvent.type = SDL_KEYDOWN;
-						sEvent.key.keysym.sym = SDLK_UP;
-					}
-					if (Config::GetControllerDown())
-					{
-						sEvent.type = SDL_KEYDOWN;
-						sEvent.key.keysym.sym = SDLK_DOWN;
-					}
-				}
-
-				if (state == STATE_PLAYING)
-				{
-					// call up menu
-					if (Config::GetControllerStart())
-					{
-						sEvent.type = SDL_KEYDOWN;
-						sEvent.key.keysym.sym = SDLK_ESCAPE;
-					}
-					if (Config::GetControllerBack())
-					{
-						sEvent.type = SDL_KEYDOWN;
-						sEvent.key.keysym.sym = SDLK_TAB;
-					}
-				}
-
-			}
-
-			if ((sEvent.type == SDL_KEYDOWN) && (sEvent.key.keysym.sym == SDLK_SPACE ||
-				sEvent.key.keysym.sym == SDLK_RETURN ||
-			   sEvent.key.keysym.sym == SDLK_LCTRL))
+			if (Input::GetButtonDown(SCE_CTRL_CROSS))
 			{
 				if (state == STATE_WAITING)
 				{
@@ -538,11 +494,9 @@ int main(int argc, char* argv[])
 				}
 			}
 
-			if (sEvent.type == SDL_KEYDOWN)
-			{
 				if (state == STATE_TITLE)
 				{
-					switch (titlescreen.Update(sEvent, levelselect))
+				switch (titlescreen.Update(levelselect))
 					{
 						case TitleScreen::TITLERET_PLAY:
 							state = STATE_PARSING;
@@ -571,9 +525,10 @@ int main(int argc, char* argv[])
 							break;
 					}
 				}
+
 				if (state == STATE_MENU)
 				{
-					switch (menuscreen.Update(sEvent))
+				switch (menuscreen.Update())
 					{
 						case MenuScreen::MENURET_PLAY:
 							state = STATE_PLAYING;
@@ -603,7 +558,6 @@ int main(int argc, char* argv[])
 				if ((state == STATE_PLAYING) && (sEvent.key.keysym.sym == SDLK_ESCAPE))
 				{
 					state = STATE_MENU;
-				}
 			}
 
 			if ((sEvent.type == SDL_KEYDOWN) && sEvent.key.keysym.sym == SDLK_F12)
@@ -665,9 +619,9 @@ int main(int argc, char* argv[])
 			renderer.SetPlayerHit(logic.GetPlayerHit());
 			renderer.SetThermo(logic.GetThermo());
 
-			// cam.x.SetInt(3969);
-			// cam.z.SetInt(5359);
-			// cam.rotquick.SetInt(254);
+			//cam.x.SetInt(3969);
+			//cam.z.SetInt(5359);
+			//cam.rotquick.SetInt(254);
 			renderer.Render(&cam);
 			MapObject pobj = logic.GetPlayerObj();
 			hud.Render(render32, pobj, smallfont);

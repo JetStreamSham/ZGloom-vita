@@ -23,7 +23,6 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fpermissive")
 #)
 
 add_executable(${PROJECT_NAME}
-	src/zgloom.cpp
 #	src/logger.h
 #	src/logger.cpp
 	src/input.h
@@ -63,6 +62,7 @@ add_executable(${PROJECT_NAME}
 	src/decrunchmania.cpp
 	src/renderer.h
 	src/renderer.cpp
+	src/zgloom.cpp
 
 )
 

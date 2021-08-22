@@ -1,8 +1,10 @@
 #pragma once
 #include <SDL2/SDL.h>
-#include "font.h"
-
+#include <psp2/ctrl.h> 
 #include <vector>
+
+#include "font.h"
+#include "input.h"
 #include "config.h"
 
 class MenuScreen
@@ -18,7 +20,7 @@ public:
 	MenuScreen();
 	void Render(SDL_Surface* src, SDL_Surface* dest, Font& font);
 	void Clock() { timer++; };
-	MenuReturn Update(SDL_Event& tevent);
+	MenuReturn Update();
 
 private:
 
@@ -62,12 +64,12 @@ private:
 	int selection;
 	int timer;
 
-	MenuReturn HandleMainMenu(SDL_Keycode sym);
-	void HandleKeyMenu(SDL_Keycode sym);
+	MenuReturn HandleMainMenu();
+	void HandleKeyMenu();
 	void HandleSoundMenu(SDL_Keycode sym);
 
 	void DisplayStandardMenu(std::vector<MenuEntry>& menu, bool flash, int scale, SDL_Surface* dest, Font& font);
-	MenuReturn HandleStandardMenu(SDL_Keycode sym, std::vector<MenuEntry>& menu);
+	MenuReturn HandleStandardMenu(std::vector<MenuEntry>& menu);
 
 	std::vector<MenuEntry> soundmenu;
 	std::vector<MenuEntry> mainmenu;

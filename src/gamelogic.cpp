@@ -1,11 +1,10 @@
 #include "gamelogic.h"
 #include "renderer.h"
 #include "monsterlogic.h"
-#include "soundhandler.h"
 #include "hud.h"
 #include "config.h"
 
-void GameLogic::Init(ObjectGraphics* ograph)
+void GameLogic::Init(ObjectGraphics *ograph)
 {
 	// note weird order of SFX.
 	wtable[0].hitpoint = 1;
@@ -51,7 +50,7 @@ void GameLogic::Init(ObjectGraphics* ograph)
 	playerhit = false;
 }
 
-void GameLogic::ResetPlayer(MapObject& o)
+void GameLogic::ResetPlayer(MapObject &o)
 {
 	// reset the player on death
 	o.data.ms.hitpoints = 25;
@@ -69,7 +68,7 @@ void GameLogic::ResetPlayer(MapObject& o)
 	o.data.ms.bouncecnt = 0;
 }
 
-void GameLogic::InitLevel(GloomMap* gmapin, Camera* cam, ObjectGraphics* ograph)
+void GameLogic::InitLevel(GloomMap *gmapin, Camera *cam, ObjectGraphics *ograph)
 {
 	gmap = gmapin;
 	objectgraphics = ograph;
@@ -86,7 +85,7 @@ void GameLogic::InitLevel(GloomMap* gmapin, Camera* cam, ObjectGraphics* ograph)
 
 	for (auto &o : gmap->GetMapObjects())
 	{
-		if (o.t == 0)// player
+		if (o.t == 0) // player
 		{
 			cam->x = o.x;
 			cam->y = 120; //TODO, and rotation
@@ -105,7 +104,7 @@ void GameLogic::InitLevel(GloomMap* gmapin, Camera* cam, ObjectGraphics* ograph)
 	}
 }
 
-bool GameLogic::AdjustPos(int32_t& overshoot, Quick& x, Quick& z, int32_t r, int32_t& closestzone)
+bool GameLogic::AdjustPos(int32_t &overshoot, Quick &x, Quick &z, int32_t r, int32_t &closestzone)
 {
 	/*
 	adjustposq;
@@ -195,9 +194,9 @@ void GameLogic::MoveBlood()
 
 				MapObject o = GetNamedObj(b.dest);
 
-				int32_t dist = (o.x.GetInt() - b.x.GetInt()) *  (o.x.GetInt() - b.x.GetInt());
+				int32_t dist = (o.x.GetInt() - b.x.GetInt()) * (o.x.GetInt() - b.x.GetInt());
 
-				dist += (o.z.GetInt() - b.z.GetInt()) *  (o.z.GetInt() - b.z.GetInt());
+				dist += (o.z.GetInt() - b.z.GetInt()) * (o.z.GetInt() - b.z.GetInt());
 
 				if (dist < 64 * 64)
 				{
@@ -246,7 +245,7 @@ void GameLogic::DoDoor()
 		move	d1, zo_open(a0); copy frac
 		;
 		*/
-		Zone& zone = gmap->GetZones()[d.do_poly];
+		Zone &zone = gmap->GetZones()[d.do_poly];
 
 		d.do_frac += d.do_fracadd;
 		zone.open = d.do_frac * 2;
@@ -332,7 +331,7 @@ void GameLogic::DoDoor()
 		}
 		else
 		{
-			++ i;
+			++i;
 		}
 	}
 }
@@ -369,7 +368,7 @@ MapObject GameLogic::GetNamedObj(uint64_t id)
 	return gmap->GetMapObjects().front();
 }
 
-uint8_t GameLogic::PickCalc(MapObject& o)
+uint8_t GameLogic::PickCalc(MapObject &o)
 {
 	/*
 	pickcalc; pick a player and calculate angle to player!
@@ -396,12 +395,12 @@ uint8_t GameLogic::PickCalc(MapObject& o)
 	return ang;
 }
 
-void  GameLogic::DoRot()
+void GameLogic::DoRot()
 {
-	std::vector<ActiveRotPoly>&rotpolys = gmap->GetActiveRotPolys();
-	std::vector<Zone>&zones = gmap->GetZones();
+	std::vector<ActiveRotPoly> &rotpolys = gmap->GetActiveRotPolys();
+	std::vector<Zone> &zones = gmap->GetZones();
 
-	for (auto& r: rotpolys)
+	for (auto &r : rotpolys)
 	{
 		if (r.speed)
 		{
@@ -438,7 +437,8 @@ void  GameLogic::DoRot()
 					auto thiszone = r.first + vertex;
 					auto prevzone = thiszone - 1;
 
-					if (vertex == 0) prevzone = r.first + r.num - 1;
+					if (vertex == 0)
+						prevzone = r.first + r.num - 1;
 
 					/*
 						.loop	movem(a3) + , d0 - d3, (vx, vz, ox, oz, d4 is rot)
@@ -460,7 +460,7 @@ void  GameLogic::DoRot()
 					vx >>= 16;
 					vx += r.ox[vertex];
 
-					int32_t vz= r.vz[vertex];
+					int32_t vz = r.vz[vertex];
 					vz *= r.rot;
 					vz <<= 2;
 					vz >>= 16;
@@ -487,7 +487,6 @@ void  GameLogic::DoRot()
 					zones[thiszone].a = -rz;
 					zones[thiszone].b = rx;
 				}
-
 			}
 			else
 			{
@@ -499,7 +498,8 @@ void  GameLogic::DoRot()
 					auto thiszone = r.first + vertex;
 					auto prevzone = thiszone - 1;
 
-					if (vertex == 0) prevzone = r.first + r.num - 1;
+					if (vertex == 0)
+						prevzone = r.first + r.num - 1;
 
 					int16_t rotmatrix[4];
 					GloomMaths::GetCamRot2Raw(r.rot & 1023, rotmatrix);
@@ -527,7 +527,7 @@ void  GameLogic::DoRot()
 	}
 }
 
-void GameLogic::Rotter(int16_t x, int16_t z, int16_t&nx, int16_t& nz, int16_t camrots[4])
+void GameLogic::Rotter(int16_t x, int16_t z, int16_t &nx, int16_t &nz, int16_t camrots[4])
 {
 	/*
 		move	d0, d2
@@ -556,7 +556,7 @@ void GameLogic::Rotter(int16_t x, int16_t z, int16_t&nx, int16_t& nz, int16_t ca
 	nz = (newz >> 16);
 }
 
-bool GameLogic::Collision(bool event, int32_t x, int32_t z, int32_t r, int32_t& overshoot, int32_t& closestzone)
+bool GameLogic::Collision(bool event, int32_t x, int32_t z, int32_t r, int32_t &overshoot, int32_t &closestzone)
 {
 	// do 3x3 square
 
@@ -572,7 +572,7 @@ bool GameLogic::Collision(bool event, int32_t x, int32_t z, int32_t r, int32_t& 
 
 			if ((gx >= 0) && (gx < 32) && (gz >= 0) && (gz < 32))
 			{
-				std::vector<uint32_t> collzones = gmap->GetCollisions(event?1:0, gx, gz);
+				std::vector<uint32_t> collzones = gmap->GetCollisions(event ? 1 : 0, gx, gz);
 
 				for (size_t checkzone = 0; checkzone < collzones.size(); checkzone++)
 				{
@@ -595,7 +595,7 @@ bool GameLogic::Collision(bool event, int32_t x, int32_t z, int32_t r, int32_t& 
 
 	// explicit check of rotpolys as they may have gone out of their collision grid spot
 
-	std::vector<ActiveRotPoly>& rotpolys = gmap->GetActiveRotPolys();
+	std::vector<ActiveRotPoly> &rotpolys = gmap->GetActiveRotPolys();
 
 	for (auto &thisrot : rotpolys)
 	{
@@ -621,7 +621,7 @@ bool GameLogic::Collision(bool event, int32_t x, int32_t z, int32_t r, int32_t& 
 	return !good;
 }
 
-int32_t GameLogic::FindSegDist(int32_t x, int32_t z, Zone& zone)
+int32_t GameLogic::FindSegDist(int32_t x, int32_t z, Zone &zone)
 {
 	// tranlation of source. Some kind of cross product to determine if exceeds line length, then similar perp check
 	/*
@@ -671,7 +671,7 @@ int32_t GameLogic::FindSegDist(int32_t x, int32_t z, Zone& zone)
 	tx += tz;
 	tx *= 2;
 
-	if (((tx >> 16) < zone.ln) && (tx>=0))
+	if (((tx >> 16) < zone.ln) && (tx >= 0))
 	{
 		tx = zone.x2 - x;
 		tx *= zone.a;
@@ -681,7 +681,8 @@ int32_t GameLogic::FindSegDist(int32_t x, int32_t z, Zone& zone)
 		tx += tz;
 		tx *= 2;
 
-		if (tx < 0) tx = -tx;
+		if (tx < 0)
+			tx = -tx;
 
 		return tx >> 16;
 	}
@@ -689,7 +690,7 @@ int32_t GameLogic::FindSegDist(int32_t x, int32_t z, Zone& zone)
 	return 0x3FFF;
 }
 
-bool GameLogic::Update(Camera* cam)
+bool GameLogic::Update(Camera *cam)
 {
 	Quick inc;
 	bool done = false;
@@ -700,8 +701,8 @@ bool GameLogic::Update(Camera* cam)
 
 	Quick camrots[4], camrotstrafe[4];
 
-	GloomMaths::GetCamRot(cam->rotquick.GetInt()&0xFF, camrots);
-	GloomMaths::GetCamRot((cam->rotquick.GetInt())+64&0xFF, camrotstrafe);
+	GloomMaths::GetCamRot(cam->rotquick.GetInt() & 0xFF, camrots);
+	GloomMaths::GetCamRot((cam->rotquick.GetInt()) + 64 & 0xFF, camrotstrafe);
 	const Uint8 *keystate = SDL_GetKeyboardState(NULL);
 
 	Quick newx = cam->x;
@@ -722,29 +723,25 @@ bool GameLogic::Update(Camera* cam)
 
 		//wire these up to controller as well at some point
 
-		bool controlfire  = keystate[Config::GetKey(Config::KEY_SHOOT)] != 0;
-		bool controlup = keystate[Config::GetKey(Config::KEY_UP)] != 0;
-		bool controldown = keystate[Config::GetKey(Config::KEY_DOWN)] != 0;
-		bool controlleft = keystate[Config::GetKey(Config::KEY_LEFT)] != 0;
-		bool controlright = keystate[Config::GetKey(Config::KEY_RIGHT)] != 0;
-		bool controlstrafeleft = keystate[Config::GetKey(Config::KEY_SLEFT)] != 0;
-		bool controlstraferight = keystate[Config::GetKey(Config::KEY_SRIGHT)] != 0;
-		bool controlstrafemod = keystate[Config::GetKey(Config::KEY_STRAFEMOD)] != 0;
+		bool controlfire = Input::GetButton(Config::GetKey(Config::KEY_SHOOT));
+		bool controlup = Input::GetButton(Config::GetKey(Config::KEY_UP));
+		bool controldown = Input::GetButton(Config::GetKey(Config::KEY_DOWN));
+		bool controlleft = Input::GetButton(Config::GetKey(Config::KEY_LEFT));
+		bool controlright = Input::GetButton(Config::GetKey(Config::KEY_RIGHT));
+		bool controlstrafeleft = Input::GetButton(Config::GetKey(Config::KEY_SLEFT));
+		bool controlstraferight = Input::GetButton(Config::GetKey(Config::KEY_SRIGHT));
+		bool controlstrafemod = Input::GetButton(Config::GetKey(Config::KEY_STRAFEMOD));
 
-		if (Config::HaveController())
-		{
-			Sint32 contX = Config::GetControllerX();
-			Sint32 contY = Config::GetControllerY();
+		Input::Stick leftStick = Input::GetLeftStick();
 			
-			if (contX < -8000) controlstrafeleft = true;
-			if (contX >  8000) controlstraferight = true;
-			if (contY < -8000) controlup = true;
-			if (contY >  8000) controldown = true;
-
-			if (Config::GetControllerFire()) controlfire = true;
-		}
-
-
+		if (leftStick.x < 125 - Config::GetLeftStickDeadzone())
+			controlstrafeleft = true;
+		if (leftStick.x > 125 + Config::GetLeftStickDeadzone())
+			controlstraferight = true;
+		if (leftStick.y < 125 - Config::GetLeftStickDeadzone())
+			controlup = true;
+		if (leftStick.y > 125 + Config::GetLeftStickDeadzone())
+			controldown = true;
 
 		if (controlup)
 		{
@@ -879,14 +876,14 @@ bool GameLogic::Update(Camera* cam)
 			firedown = false;
 		}
 
-		if (playerobj.data.ms.reloadcnt > 0) playerobj.data.ms.reloadcnt--;
+		if (playerobj.data.ms.reloadcnt > 0)
+			playerobj.data.ms.reloadcnt--;
 
-		if (keystate[SDL_SCANCODE_F1])
-		{
-			// cheat for debug
-			done = true;
-		}
-
+		// if (Input::GetButtonDown())
+		// {
+		// 	// cheat for debug
+		// 	done = true;
+		// }
 
 		int32_t overshoot, closestzone;
 
@@ -917,24 +914,21 @@ bool GameLogic::Update(Camera* cam)
 			}
 		}
 
-		// mouse control
-		{
-			int mx, my;
-			SDL_GetRelativeMouseState(&mx, &my);
-
-			cam->rotquick.SetVal(cam->rotquick.GetVal() + mx*Config::GetMouseSens() * 800);
-		}
-
 		//gamepad control
-		if (Config::HaveController())
+
+		Input::Stick rot = Input::GetRightStick();
+		char rdeadzone = Config::GetRightStickDeadzone();
+
+		rot.x  -= 125;
+
+		if (rot.x < rdeadzone)
 		{
-			Sint32 rot = Config::GetControllerRot();
-
-			if (abs(rot) < 8000) rot = 0;
-
-			cam->rotquick.SetVal(cam->rotquick.GetVal() + rot * 10);
+			cam->rotquick.SetVal(cam->rotquick.GetVal() - abs(rot.x) * 100);
 		}
-		
+		else if (rot.x > rdeadzone)
+		{
+			cam->rotquick.SetVal(cam->rotquick.GetVal() + rot.x * 100);
+		}
 
 		CheckSuck(cam);
 
@@ -999,12 +993,15 @@ bool GameLogic::Update(Camera* cam)
 		cam->z.SetInt(activetele.z);
 		cam->rotquick.SetInt((uint8_t)activetele.rot);
 		playerobj.data.ms.pixsizeadd = -playerobj.data.ms.pixsizeadd;
-		if (levelfinished) done = true;
+		if (levelfinished)
+			done = true;
 	}
 
-	if (levelfinishednow) done = true;
+	if (levelfinishednow)
+		done = true;
 
-	if (playerobj.data.ms.pixsize == 0) playerobj.data.ms.pixsizeadd = 0;
+	if (playerobj.data.ms.pixsize == 0)
+		playerobj.data.ms.pixsizeadd = 0;
 
 	MoveBlood();
 
@@ -1017,10 +1014,10 @@ bool GameLogic::Update(Camera* cam)
 
 	//update the anims
 
-	Column** tp = gmap->GetTexPointers();
-	Column** to = gmap->GetTexPointersOrig();
+	Column **tp = gmap->GetTexPointers();
+	Column **to = gmap->GetTexPointersOrig();
 
-	for (auto& a : gmap->GetAnims())
+	for (auto &a : gmap->GetAnims())
 	{
 		a.current--;
 
@@ -1085,7 +1082,7 @@ bool GameLogic::Update(Camera* cam)
 	if (playerobj.data.ms.invisible)
 	{
 		playerobj.data.ms.invisible--;
-		if (playerobj.data.ms.invisible==0)
+		if (playerobj.data.ms.invisible == 0)
 		{
 			playerobj.data.ms.mess = Hud::MESSAGES_INVISIBILITY_OUT;
 			playerobj.data.ms.messtimer = -127;
@@ -1104,7 +1101,7 @@ bool GameLogic::Update(Camera* cam)
 	{
 		playerobj.data.ms.messtimer++;
 	}
-	if (playerobj.data.ms.fired>0)
+	if (playerobj.data.ms.fired > 0)
 	{
 		playerobj.data.ms.fired--;
 	}
@@ -1143,7 +1140,7 @@ bool GameLogic::Update(Camera* cam)
 		}
 	}
 
-	if (squished &&  (playerobj.data.ms.hitpoints <= 0))
+	if (squished && (playerobj.data.ms.hitpoints <= 0))
 	{
 		playerobj.data.ms.hitpoints = 0;
 		playerobj.data.ms.logic = PlayerDeath;
@@ -1170,7 +1167,7 @@ bool GameLogic::Update(Camera* cam)
 
 	gmap->GetMapObjects().insert(gmap->GetMapObjects().end(), newobjects.begin(), newobjects.end());
 
-	for (auto& o : gmap->GetMapObjects())
+	for (auto &o : gmap->GetMapObjects())
 	{
 		if (o.t == ObjectGraphics::OLT_PLAYER1)
 		{
@@ -1254,7 +1251,7 @@ void GameLogic::ObjectCollision()
 				int32_t xd = abs(o2.x.GetInt() - o.x.GetInt());
 				int32_t zd = abs(o2.z.GetInt() - o.z.GetInt());
 
-				if ((xd*xd + zd*zd) < (radsum*radsum))
+				if ((xd * xd + zd * zd) < (radsum * radsum))
 				{
 					//printf("COLLISION %i %i\n", o.t, o2.t);
 					if (o.data.ms.washit == o2.identifier)
@@ -1293,7 +1290,7 @@ void GameLogic::ObjectCollision()
 	}
 }
 
-void GameLogic::CheckSuck(Camera* cam)
+void GameLogic::CheckSuck(Camera *cam)
 {
 	/*
 	checksuck	cmp.l	sucking(pc),a5
@@ -1330,7 +1327,8 @@ void GameLogic::CheckSuck(Camera* cam)
 	xpos = cam->x;
 	zpos = cam->z;
 
-	if (!sucking) return;
+	if (!sucking)
+		return;
 
 	int16_t camrots[4];
 	GloomMaths::GetCamRotRaw(suckangle, camrots);
@@ -1363,5 +1361,4 @@ void GameLogic::CheckSuck(Camera* cam)
 			cam->z = zpos;
 		}
 	}
-
 }

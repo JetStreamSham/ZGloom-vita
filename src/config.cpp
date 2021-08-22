@@ -1,6 +1,8 @@
 #include "config.h"
 #include "objectgraphics.h"
 #include "soundhandler.h"
+
+#include <psp2/ctrl.h>
 #include <string>
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
@@ -11,7 +13,7 @@ namespace Config
 {
 	static bool zombiemassacremode = false;
 
-	static int configkeys[KEY_END];
+	static SceCtrlButtons configkeys[KEY_END];
 	static int renderwidth;
 	static int renderheight;
 	static int windowwidth;
@@ -22,19 +24,30 @@ namespace Config
 	static int bloodsize;
 	static bool debug = false;
 	static uint32_t FPS;
-	static bool multithread = true;
+	static bool multithread = false;
 	static bool vsync = false;
 	static bool fullscreen = false;
 	static bool switchsticks = false;
+
+	static unsigned char rightStickDeadzone = 20;
+	static unsigned char leftStickDeadzone = 20;
 
 	static int sfxvol;
 	static int musvol;
 	static xmp_context musctx;
 
 	// needed to toggle fullscreen
-	static SDL_Window* win;
+	static SDL_Window *win;
 
-	static SDL_GameController *controller = nullptr;
+	unsigned char GetRightStickDeadzone()
+	{
+		return rightStickDeadzone;
+	}
+
+	unsigned char GetLeftStickDeadzone()
+	{
+		return leftStickDeadzone;
+	}
 
 	void SetDebug(bool b)
 	{
@@ -58,7 +71,7 @@ namespace Config
 
 	void SetFullscreen(int f)
 	{
-		fullscreen = f?1:0;
+		fullscreen = f ? 1 : 0;
 
 		if (fullscreen)
 		{
@@ -72,7 +85,7 @@ namespace Config
 
 	int GetFullscreen()
 	{
-		return fullscreen?1:0;
+		return fullscreen ? 1 : 0;
 	}
 
 	int GetSwitchSticks()
@@ -169,11 +182,17 @@ namespace Config
 		std::string result;
 		if (zombiemassacremode)
 		{
-			if (i == 0) result = "ux0:/data/zgloom/musi/meda"; else result = "ux0:/data/zgloom/musi/medb";
+			if (i == 0)
+				result = "ux0:/data/zgloom/musi/meda";
+			else
+				result = "ux0:/data/zgloom/musi/medb";
 		}
 		else
 		{
-			if (i == 0) result = "ux0:/data/zgloom/sfxs/med1"; else result = "ux0:/data/zgloom/sfxs/med2";
+			if (i == 0)
+				result = "ux0:/data/zgloom/sfxs/med1";
+			else
+				result = "ux0:/data/zgloom/sfxs/med2";
 		}
 
 		return result;
@@ -199,7 +218,7 @@ namespace Config
 		musctx = ctx;
 	}
 
-	void RegisterWin(SDL_Window* _win)
+	void RegisterWin(SDL_Window *_win)
 	{
 		win = _win;
 	}
@@ -220,7 +239,6 @@ namespace Config
 			objectfilenames[ObjectGraphics::OGT_DEMON] = "ux0:/data/zgloom/char/zocom";
 			objectfilenames[ObjectGraphics::OGT_DEATHHEAD] = "ux0:/data/zgloom/char/dows-head";
 			objectfilenames[ObjectGraphics::OGT_TROLL] = "ux0:/data/zgloom/char/james";
-
 
 			//double check these
 			soundfilenames[SoundHandler::SOUND_SHOOT] = "ux0:/data/zgloom/musi/shoot.bin";
@@ -287,14 +305,14 @@ namespace Config
 			soundfilenames[SoundHandler::SOUND_DRAGON] = "ux0:/data/zgloom/sfxs/dragon.bin";
 		}
 
-		configkeys[KEY_SHOOT] = SDL_SCANCODE_LCTRL;
-		configkeys[KEY_UP] = SDL_SCANCODE_UP;
-		configkeys[KEY_DOWN] = SDL_SCANCODE_DOWN;
-		configkeys[KEY_LEFT] = SDL_SCANCODE_LEFT;
-		configkeys[KEY_RIGHT] = SDL_SCANCODE_RIGHT;
-		configkeys[KEY_SLEFT] = SDL_SCANCODE_A;
-		configkeys[KEY_SRIGHT] = SDL_SCANCODE_D;
-		configkeys[KEY_STRAFEMOD] = SDL_SCANCODE_LALT;
+		configkeys[KEY_SHOOT] = SCE_CTRL_CROSS;
+		configkeys[KEY_UP] = SCE_CTRL_UP;
+		configkeys[KEY_DOWN] = SCE_CTRL_DOWN;
+		configkeys[KEY_LEFT] = SCE_CTRL_LTRIGGER | SCE_CTRL_TRIANGLE;
+		configkeys[KEY_RIGHT] = SCE_CTRL_RTRIGGER | SCE_CTRL_SQUARE;
+		configkeys[KEY_SLEFT] = SCE_CTRL_LEFT;
+		configkeys[KEY_SRIGHT] = SCE_CTRL_RIGHT;
+		configkeys[KEY_STRAFEMOD] = SCE_CTRL_CIRCLE;
 
 		renderwidth = 320;
 		renderheight = 256;
@@ -317,18 +335,9 @@ namespace Config
 
 		autofire = false;
 
-		for (int i = 0; i < SDL_NumJoysticks(); ++i) 
-		{
-			if (SDL_IsGameController(i)) 
-			{
-				controller = SDL_GameControllerOpen(i);
-				break;
-			}
-		}
-
 		std::ifstream file;
 
-		file.open("config.txt");
+		file.open("ux0:/data/zgloom/config.txt");
 
 		if (file.is_open())
 		{
@@ -341,7 +350,7 @@ namespace Config
 				if (line.size() && (line[0] != ';'))
 				{
 					std::string command = line.substr(0, line.find(" "));
-					line = line.substr(line.find(" ")+1, std::string::npos);
+					line = line.substr(line.find(" ") + 1, std::string::npos);
 
 					//std::cout << "\"" << line << "\"" << std::endl;
 
@@ -391,7 +400,7 @@ namespace Config
 					}
 					if (command == "multithread")
 					{
-						multithread = std::stoi(line)!=0;
+						multithread = std::stoi(line) != 0;
 					}
 					if (command == "vsync")
 					{
@@ -404,6 +413,14 @@ namespace Config
 					if (command == "autofire")
 					{
 						autofire = std::stoi(line) != 0;
+					}
+					if (command == "rightStickDeadzone")
+					{
+						rightStickDeadzone = std::stoi(line.substr(0, line.find(" ")));
+					}
+					if (command == "leftStickDeadzone")
+					{
+						leftStickDeadzone = std::stoi(line.substr(0, line.find(" ")));
 					}
 				}
 			}
@@ -444,7 +461,7 @@ namespace Config
 
 	int GetMT()
 	{
-		return multithread?1:0;
+		return multithread ? 1 : 0;
 	}
 
 	void SetMT(int s)
@@ -480,60 +497,7 @@ namespace Config
 
 	void SetAutoFire(int a)
 	{
-		autofire = (a!=0);
-	}
-
-	bool HaveController()
-	{
-		return controller != nullptr;
-	}
-
-	Sint16 GetControllerRot()
-	{
-		return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX);
-	}
-
-	Sint16 GetControllerY()
-	{
-		return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY);
-	}
-
-	Sint16 GetControllerX()
-	{
-		return SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX);
-	}
-
-	bool GetControllerFire()
-	{
-		if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_A)) return true;
-		if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_B)) return true;
-		if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_X)) return true;
-		if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_Y)) return true;
-
-
-		if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_LEFTSHOULDER)) return true;
-		if (SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_RIGHTSHOULDER)) return true;
-
-
-		return false;
-	}
-
-	// just for menus
-	bool GetControllerDown()
-	{
-		return SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_DOWN)!=0;
-	}
-	bool GetControllerUp()
-	{
-		return SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_DPAD_UP)!=0;
-	}
-	bool GetControllerStart()
-	{
-		return SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_START)!=0;
-	}
-	bool GetControllerBack()
-	{
-		return SDL_GameControllerGetButton(controller, SDL_CONTROLLER_BUTTON_BACK) != 0;
+		autofire = (a != 0);
 	}
 
 	void SetMusicVol(int vol)
@@ -549,10 +513,6 @@ namespace Config
 
 	void Save()
 	{
-		if (controller)
-		{
-			SDL_GameControllerClose(controller);
-		}
 
 		std::ofstream file;
 
@@ -603,16 +563,21 @@ namespace Config
 			file << "musvol " << musvol << "\n";
 
 			file << ";multithreaded renderer (somewhat experimental)\n";
-			file << "multithread " << (multithread?1:0) << "\n";
+			file << "multithread " << (multithread ? 1 : 0) << "\n";
 
 			file << ";rapidfire?\n";
 			file << "autofire " << (autofire ? 1 : 0) << "\n";
+
+			file << ";rightStickDeadzone\n";
+			file << "rightStickDeadzone " << rightStickDeadzone << "\n";
+			file << ";leftStickDeadzone\n";
+			file << "leftStickDeadzone " << leftStickDeadzone << "\n";
 
 			file.close();
 		}
 	}
 
-	void GetRenderSizes(int &rw, int &rh, int &ww, int& wh)
+	void GetRenderSizes(int &rw, int &rh, int &ww, int &wh)
 	{
 		rw = renderwidth;
 		rh = renderheight;

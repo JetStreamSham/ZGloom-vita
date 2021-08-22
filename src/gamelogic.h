@@ -1,7 +1,10 @@
 #pragma once
 
+#include <psp2/ctrl.h>
+
 #include "gloommap.h"
 #include "renderer.h"
+#include "input.h"
 #include "soundhandler.h"
 
 class Camera;

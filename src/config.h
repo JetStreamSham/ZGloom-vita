@@ -1,4 +1,5 @@
 #pragma once
+#include <psp2/ctrl.h>
 
 #include <string>
 #include "objectgraphics.h"
@@ -55,16 +56,10 @@ namespace Config
 	int GetAutoFire();
 	void SetAutoFire(int a);
 
-	//controller support
-	bool HaveController();
-	Sint16 GetControllerRot();
-	Sint16 GetControllerY();
-	Sint16 GetControllerX();
-	bool GetControllerFire();
-	bool GetControllerDown();
-	bool GetControllerUp();
-	bool GetControllerStart();
-	bool GetControllerBack();
+	bool UseSticks();
+	
+	unsigned char GetRightStickDeadzone();
+	unsigned char GetLeftStickDeadzone();
 
 	int GetSwitchSticks();
 	void SetSwitchSticks(int s);

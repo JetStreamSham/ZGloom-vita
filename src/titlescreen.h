@@ -1,6 +1,9 @@
 #pragma once
+#include <psp2/ctrl.h> 
 #include <SDL2/SDL.h>
+
 #include "font.h"
+#include "input.h"
 
 #include <vector>
 #include <string>
@@ -19,7 +22,7 @@ class TitleScreen
 		TitleScreen();
 		void Render(SDL_Surface* src, SDL_Surface* dest, Font& font);
 		void Clock() { timer++; };
-		TitleReturn Update(SDL_Event& tevent, int& levelout);
+		TitleReturn Update(int& levelout);
 		void SetLevels(std::vector<std::string> names) 
 		{
 			levelnames = names;
