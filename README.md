@@ -1,10 +1,10 @@
-# ZGloom
+# ZGloom-Vita
 
 A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.
 
 # Instructions
 
-## Linux
+## Building on Linux
 
 1. Install the [VitaSDK](https://vitasdk.org/)
 2. Install the LibXMP vita library [port](https://github.com/JetStreamSham/libxmp). See the [porting libraries](https://vitasdk.org/) section for installtion instructions.
