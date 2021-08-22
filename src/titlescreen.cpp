@@ -26,18 +26,19 @@ void TitleScreen::Render(SDL_Surface* src, SDL_Surface* dest, Font& font)
 	{
 		font.PrintMessage("GLOOM", 30, dest, 1);
 
-		font.PrintMessage("A BLACK MAGIC GAME", 50, dest, 1);
+		font.PrintMessage("A BLACK MAGIC GAME ENGINE", 50, dest, 1); // added "ENGINE" for other ZGloom games
 
 		font.PrintMessage("PROGRAMMED BY MARK SIBLY", 70, dest, 1);
 		font.PrintMessage("GRAPHICS BY THE BUTLER BROTHERS", 80, dest, 1);
 		font.PrintMessage("MUSIC BY KEV STANNARD", 90, dest, 1);
 		font.PrintMessage("AUDIO BY US", 100, dest, 1);
-		font.PrintMessage("PRODUCED BY US", 110, dest, 1);
-		font.PrintMessage("DESIGNED BY US", 120, dest, 1);
-		font.PrintMessage("GAME CODED IN DEVPAC2", 130, dest, 1);
-		font.PrintMessage("UTILITIES CODED IN BLITZ BASIC 2", 140, dest, 1);
-		font.PrintMessage("RENDERED IN DPAINT3 AND DPAINT4", 150, dest, 1);
-		font.PrintMessage("DECRUNCHING CODE BY THOMAS SCHWARZ", 160, dest, 1);
+		font.PrintMessage("PRODUCED AMD DESIGNED BY US", 110, dest, 1);
+		font.PrintMessage("GAME CODED IN DEVPAC2", 120, dest, 1);
+		font.PrintMessage("UTILITIES CODED IN BLITZ BASIC 2", 130, dest, 1);
+		font.PrintMessage("RENDERED IN DPAINT3 AND DPAINT4", 140, dest, 1);
+		font.PrintMessage("DECRUNCHING CODE BY THOMAS SCHWARZ", 150, dest, 1);
+		
+		font.PrintMessage("PSVITA PORT BY JETSTREAMSHAM", 170, dest, 1); // added port
 	}
 }
 
