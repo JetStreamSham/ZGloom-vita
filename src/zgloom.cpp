@@ -61,7 +61,7 @@ void LoadPic(std::string name, SDL_Surface *render8)
 	SDL_FillRect(render8, nullptr, 0);
 
 	// is this some sort of weird AGA/ECS backwards compatible palette encoding? 4 MSBs, then LSBs?
-	// Update: Yes, yes it is. 
+	// Update: Yes, yes it is.
 	for (uint32_t c = 0; c < palfile.size / 4; c++)
 	{
 		SDL_Color col;
@@ -135,7 +135,7 @@ int main(int argc, char *argv[])
 		fclose(file);
 		Config::SetZM(true);
 	}
-	
+
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 	{
 		fputs("SDL_Init Error: ", dbgFile);
@@ -171,9 +171,8 @@ int main(int argc, char *argv[])
 	titlemusic.Load(Config::GetMusicFilename(0).c_str());
 	intermissionmusic.Load(Config::GetMusicFilename(1).c_str());
 
+	SoundHandler::Init();
 
-	SoundHandler::Init(); 
-	
 	SDL_Window *win = SDL_CreateWindow("ZGloom", 100, 100, windowwidth, windowheight, SDL_WINDOW_SHOWN | (Config::GetFullscreen() ? SDL_WINDOW_FULLSCREEN : 0));
 	if (win == nullptr)
 	{
@@ -245,12 +244,9 @@ int main(int argc, char *argv[])
 		LoadPic(Config::GetPicsDir() + "title", titlebitmap);
 	}
 	else
-	{	
+	{
 		LoadPic(Config::GetPicsDir() + "blackmagic", titlebitmap);
 	}
-
-	
-
 
 	if (titlemusic.data)
 	{
@@ -267,7 +263,6 @@ int main(int argc, char *argv[])
 		Config::SetMusicVol(Config::GetMusicVol());
 	}
 
-
 	std::string intermissiontext;
 
 	bool intermissionmusplaying = false;
@@ -277,7 +272,7 @@ int main(int argc, char *argv[])
 	uint32_t fps = 0;
 	uint32_t fpscounter = 0;
 
-	Mix_Volume(-1, Config::GetSFXVol()*12);
+	Mix_Volume(-1, Config::GetSFXVol() * 12);
 	Mix_VolumeMusic(Config::GetMusicVol() * 12);
 
 	//try and blit title etc into the middle of the screen
@@ -290,7 +285,7 @@ int main(int argc, char *argv[])
 	blitrect.y = (renderheight - 256 * screenscale) / 2;
 
 	SDL_SetRelativeMouseMode(SDL_TRUE);
-	
+
 	//set up the level select
 
 	std::vector<std::string> levelnames;
@@ -315,60 +310,35 @@ int main(int argc, char *argv[])
 
 			switch (sop)
 			{
-				case Script::SOP_SETPICT:
-				{
-					scriptstring.insert(0, Config::GetPicsDir());
-					LoadPic(scriptstring, intermissionscreen);
-					SDL_SetPaletteColors(render8->format->palette, intermissionscreen->format->palette->colors, 0, 256);
-					break;
-				}
-				case Script::SOP_SONG:
-				{
-					scriptstring.insert(0, Config::GetMusicDir());
-					ingamemusic.Load(scriptstring.c_str());
-					haveingamemusic = (ingamemusic.data != nullptr);
-					break;
-				}
-				case Script::SOP_LOADFLAT:
-				{
-					//improve this, only supports 9 flats
-					gmap.SetFlat(scriptstring[0] - '0');
-					break;
-				}
-				case Script::SOP_TEXT:
-				{
-					 intermissiontext = scriptstring;
+			case Script::SOP_SETPICT:
+			{
+				scriptstring.insert(0, Config::GetPicsDir());
+				LoadPic(scriptstring, intermissionscreen);
+				SDL_SetPaletteColors(render8->format->palette, intermissionscreen->format->palette->colors, 0, 256);
+				break;
+			}
+			case Script::SOP_SONG:
+			{
+				scriptstring.insert(0, Config::GetMusicDir());
+				ingamemusic.Load(scriptstring.c_str());
+				haveingamemusic = (ingamemusic.data != nullptr);
+				break;
+			}
+			case Script::SOP_LOADFLAT:
+			{
+				//improve this, only supports 9 flats
+				gmap.SetFlat(scriptstring[0] - '0');
+				break;
+			}
+			case Script::SOP_TEXT:
+			{
+				intermissiontext = scriptstring;
 
-					 if (state == STATE_SPOOLING)
-					 {
-						 if (intermissiontext == levelnames[levelselect])
-						 {
-							 // level selector
-							 if (intermissionmusic.data)
-							 {
-								 if (xmp_load_module_from_memory(ctx, intermissionmusic.data, intermissionmusic.size))
-								 {
-									 std::cout << "music error";
-								 }
-
-								 if (xmp_start_player(ctx, 22050, 0))
-								 {
-									 std::cout << "music error";
-								 }
-								 Mix_HookMusic(fill_audio, ctx);
-								 Config::SetMusicVol(Config::GetMusicVol());
-								 intermissionmusplaying = true; 
-							 }
-
-							 state = STATE_PARSING;
-						 }
-					 }
-					 break;
-				}
-				case Script::SOP_DRAW:
+				if (state == STATE_SPOOLING)
 				{
-					if (state == STATE_PARSING)
+					if (intermissiontext == levelnames[levelselect])
 					{
+						// level selector
 						if (intermissionmusic.data)
 						{
 							if (xmp_load_module_from_memory(ctx, intermissionmusic.data, intermissionmusic.size))
@@ -384,67 +354,65 @@ int main(int argc, char *argv[])
 							Config::SetMusicVol(Config::GetMusicVol());
 							intermissionmusplaying = true;
 						}
+
+						state = STATE_PARSING;
 					}
-					break;
 				}
-				case Script::SOP_WAIT:
+				break;
+			}
+			case Script::SOP_DRAW:
+			{
+				if (state == STATE_PARSING)
 				{
-					if (state == STATE_PARSING)
+					if (intermissionmusic.data)
 					{
-						state = STATE_WAITING;
-
-						SDL_SetPaletteColors(render8->format->palette, smallfont.GetPalette()->colors, 0, 16);
-						SDL_BlitSurface(intermissionscreen, NULL, render8, NULL);
-						smallfont.PrintMultiLineMessage(intermissiontext, 220, render8);
-					}
-					break;
-				}
-				case Script::SOP_PLAY:
-				{
-					if (state == STATE_PARSING)
-					{
-
-						cam.x.SetInt(0);
-						cam.y = 120;
-						cam.z.SetInt(0);
-						cam.rotquick.SetInt(0);
-						scriptstring.insert(0, Config::GetLevelDir());
-						gmap.Load(scriptstring.c_str(), &objgraphics);
-						//gmap.Load("maps/map1_4", &objgraphics);
-						renderer.Init(render32, &gmap, &objgraphics);
-						logic.InitLevel(&gmap, &cam, &objgraphics);
-						state = STATE_PLAYING;
-
-						if (haveingamemusic)
+						if (xmp_load_module_from_memory(ctx, intermissionmusic.data, intermissionmusic.size))
 						{
-							if (xmp_load_module_from_memory(ctx, ingamemusic.data, ingamemusic.size))
-							{
-								std::cout << "music error";
-							}
-
-							if (xmp_start_player(ctx, 22050, 0))
-							{
-								std::cout << "music error";
-							}
-							Mix_HookMusic(fill_audio, ctx);
-							Config::SetMusicVol(Config::GetMusicVol());
+							std::cout << "music error";
 						}
+
+						if (xmp_start_player(ctx, 22050, 0))
+						{
+							std::cout << "music error";
+						}
+						Mix_HookMusic(fill_audio, ctx);
+						Config::SetMusicVol(Config::GetMusicVol());
+						intermissionmusplaying = true;
 					}
-					break;
 				}
-				case Script::SOP_END:
+				break;
+			}
+			case Script::SOP_WAIT:
+			{
+				if (state == STATE_PARSING)
 				{
-					state = STATE_TITLE;
-					if (intermissionmusic.data && intermissionmusplaying)
+					state = STATE_WAITING;
+
+					SDL_SetPaletteColors(render8->format->palette, smallfont.GetPalette()->colors, 0, 16);
+					SDL_BlitSurface(intermissionscreen, NULL, render8, NULL);
+					smallfont.PrintMultiLineMessage(intermissiontext, 220, render8);
+				}
+				break;
+			}
+			case Script::SOP_PLAY:
+			{
+				if (state == STATE_PARSING)
+				{
+
+					cam.x.SetInt(0);
+					cam.y = 120;
+					cam.z.SetInt(0);
+					cam.rotquick.SetInt(0);
+					scriptstring.insert(0, Config::GetLevelDir());
+					gmap.Load(scriptstring.c_str(), &objgraphics);
+					//gmap.Load("maps/map1_4", &objgraphics);
+					renderer.Init(render32, &gmap, &objgraphics);
+					logic.InitLevel(&gmap, &cam, &objgraphics);
+					state = STATE_PLAYING;
+
+					if (haveingamemusic)
 					{
-						Mix_HookMusic(nullptr, nullptr);
-						xmp_end_player(ctx);
-						xmp_release_module(ctx);
-						intermissionmusplaying = false;
-					}
-					if (titlemusic.data)
-					{
-						if (xmp_load_module_from_memory(ctx, titlemusic.data, titlemusic.size))
+						if (xmp_load_module_from_memory(ctx, ingamemusic.data, ingamemusic.size))
 						{
 							std::cout << "music error";
 						}
@@ -456,8 +424,35 @@ int main(int argc, char *argv[])
 						Mix_HookMusic(fill_audio, ctx);
 						Config::SetMusicVol(Config::GetMusicVol());
 					}
-					break;
 				}
+				break;
+			}
+			case Script::SOP_END:
+			{
+				state = STATE_TITLE;
+				if (intermissionmusic.data && intermissionmusplaying)
+				{
+					Mix_HookMusic(nullptr, nullptr);
+					xmp_end_player(ctx);
+					xmp_release_module(ctx);
+					intermissionmusplaying = false;
+				}
+				if (titlemusic.data)
+				{
+					if (xmp_load_module_from_memory(ctx, titlemusic.data, titlemusic.size))
+					{
+						std::cout << "music error";
+					}
+
+					if (xmp_start_player(ctx, 22050, 0))
+					{
+						std::cout << "music error";
+					}
+					Mix_HookMusic(fill_audio, ctx);
+					Config::SetMusicVol(Config::GetMusicVol());
+				}
+				break;
+			}
 			}
 		}
 
@@ -494,86 +489,83 @@ int main(int argc, char *argv[])
 				}
 			}
 
-				if (state == STATE_TITLE)
-				{
-				switch (titlescreen.Update(levelselect))
-					{
-						case TitleScreen::TITLERET_PLAY:
-							state = STATE_PARSING;
-							logic.Init(&objgraphics);
-							if (titlemusic.data)
-							{
-								Mix_HookMusic(nullptr, nullptr);
-								xmp_end_player(ctx);
-								xmp_release_module(ctx);
-							}
-							break;
-						case TitleScreen::TITLERET_SELECT:
-							state = STATE_SPOOLING;
-							logic.Init(&objgraphics);
-							if (titlemusic.data)
-							{
-								Mix_HookMusic(nullptr, nullptr);
-								xmp_end_player(ctx);
-								xmp_release_module(ctx);
-							}
-							break;
-						case TitleScreen::TITLERET_QUIT:
-							notdone = false;
-							break;
-						default:
-							break;
-					}
-				}
-
-				if (state == STATE_MENU)
-				{
-				switch (menuscreen.Update())
-					{
-						case MenuScreen::MENURET_PLAY:
-							state = STATE_PLAYING;
-							break;
-						case MenuScreen::MENURET_QUIT:
-							script.Reset();
-							state = STATE_TITLE;
-							if (titlemusic.data)
-							{
-								if (xmp_load_module_from_memory(ctx, titlemusic.data, titlemusic.size))
-								{
-									std::cout << "music error";
-								}
-
-								if (xmp_start_player(ctx, 22050, 0))
-								{
-									std::cout << "music error";
-								}
-								Mix_HookMusic(fill_audio, ctx);
-								Config::SetMusicVol(Config::GetMusicVol());
-							}
-							break;
-						default:
-							break;
-					}
-				}
-				if ((state == STATE_PLAYING) && (sEvent.key.keysym.sym == SDLK_ESCAPE))
-				{
-					state = STATE_MENU;
-			}
-
-			if ((sEvent.type == SDL_KEYDOWN) && sEvent.key.keysym.sym == SDLK_F12)
+			if (state == STATE_TITLE)
 			{
-				Config::SetFullscreen(!Config::GetFullscreen());
+				switch (titlescreen.Update(levelselect))
+				{
+				case TitleScreen::TITLERET_PLAY:
+					state = STATE_PARSING;
+					logic.Init(&objgraphics);
+					if (titlemusic.data)
+					{
+						Mix_HookMusic(nullptr, nullptr);
+						xmp_end_player(ctx);
+						xmp_release_module(ctx);
+					}
+					break;
+				case TitleScreen::TITLERET_SELECT:
+					state = STATE_SPOOLING;
+					logic.Init(&objgraphics);
+					if (titlemusic.data)
+					{
+						Mix_HookMusic(nullptr, nullptr);
+						xmp_end_player(ctx);
+						xmp_release_module(ctx);
+					}
+					break;
+				case TitleScreen::TITLERET_QUIT:
+					notdone = false;
+					break;
+				default:
+					break;
+				}
 			}
 
-			if ((sEvent.type == SDL_KEYDOWN) && sEvent.key.keysym.sym == SDLK_TAB)
+			if (state == STATE_MENU)
+			{
+				switch (menuscreen.Update())
+				{
+				case MenuScreen::MENURET_PLAY:
+					state = STATE_PLAYING;
+					break;
+				case MenuScreen::MENURET_QUIT:
+					script.Reset();
+					state = STATE_TITLE;
+					if (titlemusic.data)
+					{
+						if (xmp_load_module_from_memory(ctx, titlemusic.data, titlemusic.size))
+						{
+							std::cout << "music error";
+						}
+
+						if (xmp_start_player(ctx, 22050, 0))
+						{
+							std::cout << "music error";
+						}
+						Mix_HookMusic(fill_audio, ctx);
+						Config::SetMusicVol(Config::GetMusicVol());
+					}
+					break;
+				default:
+					break;
+				}
+			}
+			if (Input::GetButtonDown(SCE_CTRL_START))
+			{
+				state = STATE_MENU;
+			}
+
+
+
+			if (Input::GetButtonDown(SCE_CTRL_SELECT))
 			{
 				Config::SetDebug(!Config::GetDebug());
 			}
 
-			if ((sEvent.type == SDL_KEYDOWN) && sEvent.key.keysym.sym == SDLK_PRINTSCREEN)
-			{
-				printscreen = true;
-			}
+			// if ((sEvent.type == SDL_KEYDOWN) && sEvent.key.keysym.sym == SDLK_PRINTSCREEN)
+			// {
+			// 	printscreen = true;
+			// }
 
 			if (sEvent.type == SDL_USEREVENT)
 			{
@@ -678,4 +670,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-
