@@ -1,6 +1,7 @@
 # ZGloom-Vita
 
-A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.
+A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.<br>
+A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetStreamSham](https://github.com/JetStreamSham)
 
 # Instructions
 
@@ -13,9 +14,9 @@ A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.
 
 # How to play
 
-Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).
+Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).<br>
 To play on vita download and move the assests into the following location on vita:
-ux0:/data/zgloom/ 
+> ux0:/data/zgloom/ 
 
 
 # In-game music
