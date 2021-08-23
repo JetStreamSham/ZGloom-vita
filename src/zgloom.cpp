@@ -245,7 +245,8 @@ int main(int argc, char *argv[])
 	}
 	else
 	{
-		LoadPic(Config::GetPicsDir() + "blackmagic", titlebitmap);
+		LoadPic(Config::GetPicsDir() + "spacehulk", titlebitmap);
+		// LoadPic(Config::GetPicsDir() + "blackmagic", titlebitmap);
 	}
 
 	if (titlemusic.data)
@@ -458,7 +459,8 @@ int main(int argc, char *argv[])
 
 		if (state == STATE_TITLE)
 		{
-			SDL_SetPaletteColors(render8->format->palette, titlebitmap->format->palette->colors, 0, 256);
+			SDL_SetPaletteColors(render8->format->palette, smallfont.GetPalette()->colors, 0, 16); // added for correct palette on titlescreen
+			SDL_SetPaletteColors(render8->format->palette, titlebitmap->format->palette->colors, 17, 256); // 256-16 colors should be enough
 			titlescreen.Render(titlebitmap, render8, smallfont);
 		}
 

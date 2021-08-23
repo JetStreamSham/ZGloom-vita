@@ -324,16 +324,16 @@ namespace Config
 		mousesens = 5;
 		bloodsize = 2;
 
-		multithread = false;
+		multithread = true;
 		debug = false;
 		vsync = false;
-		fullscreen = false;
+		fullscreen = true;
 		switchsticks = false;
 
 		musvol = 5;
 		sfxvol = 5;
 
-		autofire = false;
+		autofire = true;
 
 		std::ifstream file;
 
