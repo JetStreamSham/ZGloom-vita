@@ -12,7 +12,7 @@ project(ZGloom)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 set(VITA_APP_NAME "ZGloom")
-set(VITA_TITLEID  "JETS00001")
+set(VITA_TITLEID  "JETSGLOOM")
 set(VITA_VERSION  "01.00")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")

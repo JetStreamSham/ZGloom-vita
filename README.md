@@ -1,6 +1,11 @@
 # ZGloom-Vita
 
-A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.
+A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.<br>
+A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetStreamSham](https://github.com/JetStreamSham)
+
+## What is Gloom?
+
+[Gloom](https://en.wikipedia.org/wiki/Gloom_(video_game)) was a 1995 Doom-clone from Black Magic Software for Commodore Amiga. It had [very messy and meaty graphics](https://www.lemonamiga.com/games/details.php?id=1781) and needed a very powerful Amiga computer back then (A1200 @ 030 was far too low). It had several successors like Gloom Deluxe, Ultimate Gloom, Gloom 3, Zombie Massacre and even some full-game conversion of 90's Amiga games.
 
 # Instructions
 
@@ -13,10 +18,15 @@ A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.
 
 # How to play
 
-Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).
+Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).<br>
 To play on vita download and move the assests into the following location on vita:
-ux0:/data/zgloom/ 
+> ux0:/data/zgloom/ 
 
+![Preview of PSVITA](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-bubble.png)
+
+![Preview of MENU](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-menu.png)
+
+![Preview of GAME](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-ingame.png)
 
 # In-game music
 
