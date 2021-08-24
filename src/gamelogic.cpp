@@ -183,7 +183,7 @@ void GameLogic::MoveBlood()
 			bra.s	.kill
 			*/
 
-			if (!sucking) 
+			if (!sucking)
 			{
 				b.killme = true;
 			}
@@ -686,7 +686,7 @@ int32_t GameLogic::FindSegDist(int32_t x, int32_t z, Zone &zone)
 
 		return tx >> 16;
 	}
-	
+
 	return 0x3FFF;
 }
 
@@ -732,17 +732,16 @@ bool GameLogic::Update(Camera *cam)
 		bool controlstraferight = Input::GetButton(Config::GetKey(Config::KEY_SRIGHT));
 		bool controlstrafemod = Input::GetButton(Config::GetKey(Config::KEY_STRAFEMOD));
 
-// fixes missing right analog stick after deleting touchpad support
 		Input::Stick rightStick = Input::GetRightStick();
+		Sint32 rotation = (Sint32)rightStick.x - 128;
 
-		if (rightStick.x < 125 - Config::GetRightStickDeadzone())
-			controlleft = true;
-		if (rightStick.x > 125 + Config::GetRightStickDeadzone())
-			controlright = true;
-//
+		if (abs(rotation) > Config::GetRightStickDeadzone())
+		{
+			cam->rotquick.SetVal(cam->rotquick.GetVal() + rotation * Config::GetMouseSens() * 1000);
+		}
 
 		Input::Stick leftStick = Input::GetLeftStick();
-			
+
 		if (leftStick.x < 125 - Config::GetLeftStickDeadzone())
 			controlstrafeleft = true;
 		if (leftStick.x > 125 + Config::GetLeftStickDeadzone())
@@ -754,7 +753,7 @@ bool GameLogic::Update(Camera *cam)
 
 		if (controlup)
 		{
-			// U 
+			// U
 			newx = cam->x - camrots[1] * inc;
 			newz = cam->z + camrots[0] * inc;
 			moved = true;
@@ -876,7 +875,8 @@ bool GameLogic::Update(Camera *cam)
 				}
 				SoundHandler::Play(wtable[wep].sound);
 				playerobj.data.ms.reloadcnt = playerobj.data.ms.reload;
-				if (!Config::GetAutoFire()) firedown = true;
+				if (!Config::GetAutoFire())
+					firedown = true;
 				playerobj.data.ms.fired = 10;
 			}
 		}
@@ -928,7 +928,7 @@ bool GameLogic::Update(Camera *cam)
 		Input::Stick rot = Input::GetRightStick();
 		char rdeadzone = Config::GetRightStickDeadzone();
 
-		rot.x  -= 125;
+		rot.x -= 125;
 
 		if (rot.x < rdeadzone)
 		{
@@ -1054,8 +1054,8 @@ bool GameLogic::Update(Camera *cam)
 	}
 
 	ObjectCollision();
-	
-	//made a bit of a horlicks of this. 
+
+	//made a bit of a horlicks of this.
 	//I'm not confident about passing pointers to list members around, is that safe? I moved the kill pass to the end, so it should be OK, but erred on the side of safely
 	auto playerobjupdated = GetPlayerObj();
 
@@ -1291,7 +1291,7 @@ void GameLogic::ObjectCollision()
 						o2.data.ms.hit(o2, o, this);
 					}
 
-					// note break here. 
+					// note break here.
 					break;
 				}
 			}
