@@ -19,7 +19,7 @@ A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetS
 # How to play
 
 Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).<br>
-To play on vita download and move the assests into the following location on vita:
+To play on PS VITA download the .zip, extract it somewhere to your harddrive and copy only the folders to the following location on vita:
 > ux0:/data/zgloom/ 
 
 ![Preview of PSVITA](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-bubble.png)
