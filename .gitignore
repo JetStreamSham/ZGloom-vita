@@ -19,3 +19,4 @@ Makefile
 *.vpk_param.sfo
 install.sh
 src/.vscode/*
+/.vscode/*

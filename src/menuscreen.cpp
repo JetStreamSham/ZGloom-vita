@@ -114,7 +114,12 @@ void MenuScreen::HandleKeyMenu()
 		button = SCE_CTRL_LTRIGGER;
 
 	Config::SetKey((Config::keyenum)selection, button);
-	selection++;
+
+	if (button != NULL)
+	{
+		selection++;
+	}
+
 	if (selection == Config::KEY_END)
 	{
 		selection = 0;

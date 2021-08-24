@@ -414,14 +414,14 @@ namespace Config
 					{
 						autofire = std::stoi(line) != 0;
 					}
-					if (command == "rightStickDeadzone")
-					{
-						rightStickDeadzone = std::stoi(line.substr(0, line.find(" ")));
-					}
-					if (command == "leftStickDeadzone")
-					{
-						leftStickDeadzone = std::stoi(line.substr(0, line.find(" ")));
-					}
+					// if (command == "rightStickDeadzone")
+					// {
+					// 	rightStickDeadzone = std::stoi(line);
+					// }
+					// if (command == "leftStickDeadzone")
+					// {
+					// 	leftStickDeadzone = std::stoi(line);
+					// }
 				}
 			}
 
@@ -516,7 +516,7 @@ namespace Config
 
 		std::ofstream file;
 
-		file.open("config.txt");
+		file.open("ux0:/data/zgloom/config.txt");
 
 		if (file.is_open())
 		{
