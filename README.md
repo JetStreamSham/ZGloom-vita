@@ -5,9 +5,26 @@ A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetS
 
 ## What is Gloom?
 
-[Gloom](https://en.wikipedia.org/wiki/Gloom_(video_game)) was a 1995 Doom-clone from Black Magic Software for Commodore Amiga. It had [very messy and meaty graphics](https://www.lemonamiga.com/games/details.php?id=1781) and needed a very powerful Amiga computer back then (A1200 @ 030 was far too low). It had several official successors like Gloom Deluxe/Ultimate Gloom, Gloom 3, Zombie Massacre and even some full-game conversion of 90's Amiga games.
+[Gloom](https://en.wikipedia.org/wiki/Gloom_(video_game)) was a 1995 Doom-clone from Black Magic Software for Commodore Amiga. It had [very messy and meaty graphics](https://www.lemonamiga.com/games/details.php?id=1781) and needed a very powerful Amiga computer back then (A1200 @ 030 was far too low). It had several official successors like Gloom Deluxe/Ultimate Gloom (a graphical enhanced Gloom), Gloom 3, Zombie Massacre and even some full-game conversion of 90's Amiga games.
 
 # Instructions
+
+## How to play
+
+Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).<br>
+To play on PS VITA download the .zip, extract it somewhere to your harddrive and copy only the folders to the following location on vita:
+> ux0:/data/zgloom/ 
+
+For the other official games using the Black Magic "Gloom"-engine like [Gloom 3](http://aminet.net/package/game/shoot/UltimateGloomISO) and [Zombie Massacre](http://aminet.net/package/game/shoot/ZombieMassacreISO) you can load them for free on Aminet. At the moment only the `ux0:/data/zgloom` directory can be used, so if you have more than only "Gloom" be sure make separate directories like _ZGLoom3_ or _ZombieMassacre_ and rename them before playing.
+
+![Preview of Livearea](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-livearea.png)
+
+### Some screenshots from the game Gloom Deluxe itself
+![Preview of the game](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-mockup.png)
+
+## In-game music
+
+ZGloom can now add in-game music using any module that XMP can play. Put the mods in the sfxs folder and add "song_blitz.mod" or whatever the module name is to the script. Multiple song_ commands are allowed, allowing per-level music.
 
 ## Building on Linux
 
@@ -16,26 +33,9 @@ A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetS
 3. Generate makefile with `cmake CMakeLists.txt`.
 4. Compile with `make`.
 
-# How to play
-
-Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).<br>
-To play on PS VITA download the .zip, extract it somewhere to your harddrive and copy only the folders to the following location on vita:
-> ux0:/data/zgloom/ 
-
-For the other official games using the Black Magic "Gloom"-engine like [Gloom 3](http://aminet.net/package/game/shoot/UltimateGloomISO) and [Zombie Massacre](http://aminet.net/package/game/shoot/ZombieMassacreISO) you can load them for free on the Aminet. At the moment only the ux0:/data/zgloom directory can be used, so if you have more than only "Gloom" make separate directories and rename them before playing.
-
-![Preview of PSVITA](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-bubble.png)
-
-![Preview of MENU](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-menu.png)
-
-![Preview of GAME](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-ingame.png)
-
-# In-game music
-
-ZGloom can now add in-game music using any module that XMP can play. Put the mods in the sfxs folder and add "song_blitz.mod" or whatever the module name is to the script. Multiple song_ commands are allowed, allowing per-level music.
-
 # TODO
-change renderer
+Change renderer
+Perhaps a launcher for all Gloom versons
 
 # License
 
