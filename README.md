@@ -5,15 +5,15 @@ A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetS
 
 ## What is Gloom?
 
-[Gloom](https://en.wikipedia.org/wiki/Gloom_(video_game)) was a 1995 Doom-clone from Black Magic Software for Commodore Amiga. It had [very messy and meaty graphics](https://www.lemonamiga.com/games/details.php?id=1781) and needed a very powerful Amiga computer back then (A1200 @ 030 was far too low). It had several successors like Gloom Deluxe, Ultimate Gloom, Gloom 3, Zombie Massacre and even some full-game conversion of 90's Amiga games.
+[Gloom](https://en.wikipedia.org/wiki/Gloom_(video_game)) was a 1995 Doom-clone from Black Magic Software for Commodore Amiga. It had [very messy and meaty graphics](https://www.lemonamiga.com/games/details.php?id=1781) and needed a very powerful Amiga computer back then (A1200 @ 030 was far too low). It had several official successors like Gloom Deluxe/Ultimate Gloom, Gloom 3, Zombie Massacre and even some full-game conversion of 90's Amiga games.
 
 # Instructions
 
 ## Building on Linux
 
-1. Install the [VitaSDK](https://vitasdk.org/)
+1. Install the [VitaSDK](https://vitasdk.org/).
 2. Install the LibXMP vita library [port](https://github.com/JetStreamSham/libxmp). See the [porting libraries](https://vitasdk.org/) section for installtion instructions.
-3. Generate makefile with cmake .
+3. Generate makefile with `cmake CMakeLists.txt`.
 4. Compile with `make`.
 
 # How to play
@@ -21,6 +21,8 @@ A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetS
 Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).<br>
 To play on PS VITA download the .zip, extract it somewhere to your harddrive and copy only the folders to the following location on vita:
 > ux0:/data/zgloom/ 
+
+For the other official games using the Black Magic "Gloom"-engine like [Gloom 3](http://aminet.net/package/game/shoot/UltimateGloomISO) and [Zombie Massacre](http://aminet.net/package/game/shoot/ZombieMassacreISO) you can load them for free on the Aminet. At the moment only the ux0:/data/zgloom directory can be used, so if you have more than only "Gloom" make separate directories and rename them before playing.
 
 ![Preview of PSVITA](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-bubble.png)
 
