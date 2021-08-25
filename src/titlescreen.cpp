@@ -5,7 +5,7 @@ void TitleScreen::Render(SDL_Surface *src, SDL_Surface *dest, Font &font)
 	SDL_BlitSurface(src, nullptr, dest, nullptr);
 	bool flash = (timer / 5) & 1;
 
-	font.PrintMessage("A BLACK MAGIC GAME   PSVITA PORT BY JETSTREAMSHAM", 245, dest, 1); // added copyright text in footer
+	font.PrintMessage("PSVITA PORT BY JETSTREAMSHAM", 245, dest, 1); // added copyright text in footer
 
 	if (status == TITLESTATUS_MAIN)
 	{
@@ -32,20 +32,24 @@ void TitleScreen::Render(SDL_Surface *src, SDL_Surface *dest, Font &font)
 	else
 	{
 		font.PrintMessage("GLOOM", 30, dest, 1);
+		font.PrintMessage("BLACK MAGIC GAME ENGINE", 40, dest, 1); // added "ENGINE" for other ZGloom games
 
-		font.PrintMessage("A BLACK MAGIC GAME ENGINE", 50, dest, 1); // added "ENGINE" for other ZGloom games
+		font.PrintMessage("PROGRAMMED BY MARK SIBLY", 60, dest, 1);
+		font.PrintMessage("GRAPHICS BY THE BUTLER BROTHERS", 70, dest, 1);
+		font.PrintMessage("MUSIC BY KEV STANNARD", 80, dest, 1);
+		font.PrintMessage("AUDIO BY BLACK MAGIC", 90, dest, 1);
+		font.PrintMessage("PRODUCED AND DESIGNED BY BLACK MAGIC", 100, dest, 1);
+		font.PrintMessage("GAME CODED IN DEVPAC2", 110, dest, 1);
+		font.PrintMessage("UTILITIES CODED IN BLITZ BASIC 2", 120, dest, 1);
+		font.PrintMessage("RENDERED IN DPAINT3 AND DPAINT4", 130, dest, 1);
+		font.PrintMessage("DECRUNCHING CODE BY THOMAS SCHWARZ", 140, dest, 1);
+		
+		font.PrintMessage("GLOOM AND GLOOM 3 BY BLACK MAGIC", 160, dest, 1); // added copyright for Gloom series
+		font.PrintMessage("ZOMBIE MASSACRE BY ALPHA SOFTWARE", 170, dest, 1); // added copyright for Zombie Massacre
 
-		font.PrintMessage("PROGRAMMED BY MARK SIBLY", 70, dest, 1);
-		font.PrintMessage("GRAPHICS BY THE BUTLER BROTHERS", 80, dest, 1);
-		font.PrintMessage("MUSIC BY KEV STANNARD", 90, dest, 1);
-		font.PrintMessage("AUDIO BY US", 100, dest, 1);
-		font.PrintMessage("PRODUCED AND DESIGNED BY US", 110, dest, 1);
-		font.PrintMessage("GAME CODED IN DEVPAC2", 120, dest, 1);
-		font.PrintMessage("UTILITIES CODED IN BLITZ BASIC 2", 130, dest, 1);
-		font.PrintMessage("RENDERED IN DPAINT3 AND DPAINT4", 140, dest, 1);
-		font.PrintMessage("DECRUNCHING CODE BY THOMAS SCHWARZ", 150, dest, 1);
-
-		font.PrintMessage("PSVITA PORT BY JETSTREAMSHAM", 170, dest, 1); // added port
+		font.PrintMessage("PSVITA PORT BY JETSTREAMSHAM", 190, dest, 1); // added port
+		font.PrintMessage("BASED ON ZGLOOM BY SWIZPIG", 200, dest, 1); // added reimplementation
+		font.PrintMessage("ADDITIONAL GRAPHICS BY ANDIWELI", 210, dest, 1); // added "little helper"
 	}
 }
 
