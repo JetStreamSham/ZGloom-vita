@@ -552,7 +552,7 @@ int main(int argc, char *argv[])
 					break;
 				}
 			}
-			if ((state == STATE_PLAYING) && Input::GetButtonDown(SCE_CTRL_START))
+			if (Input::GetButtonDown(SCE_CTRL_START))
 			{
 				state = STATE_MENU;
 			}
