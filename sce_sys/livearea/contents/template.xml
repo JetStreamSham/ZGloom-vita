@@ -11,21 +11,21 @@
 	
 	<frame id='frame1' multi='o' autoflip='3' >
 		<liveitem>
-			<target>https://www.lemonamiga.com/games/details.php?id=1407</target>
+			<target>psla:gloomdeluxe</target>
 			<image align="right" valign="bottom">gloomdeluxe.png</image>
 		</liveitem>
 	</frame>
 	
 	<frame id='frame2' multi='o' autoflip='3' >
 		<liveitem>
-			<target>https://www.lemonamiga.com/games/details.php?id=4603</target>
+			<target>psla:zombiemassacre</target>
 			<image align="left" valign="bottom">zombiemassacre.png</image>
 		</liveitem>
 	</frame>
 
 	<frame id='frame3' multi='o' autoflip='3' >
 		<liveitem>
-			<target>https://www.lemonamiga.com/games/details.php?id=2150</target>
+			<target>psla:gloom3</target>
 			<image valign="bottom">gloom3.png</image>
 		</liveitem>
 	</frame>

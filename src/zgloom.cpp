@@ -1,5 +1,7 @@
 // zgloom.cpp : Defines the entry point for the console application.
 //
+#include <psp2/kernel/clib.h> 
+#include <psp2/apputil.h> 
 #include <psp2/ctrl.h>
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/kernel/processmgr.h>
@@ -22,6 +24,7 @@
 #include "titlescreen.h"
 #include "menuscreen.h"
 #include "hud.h"
+#include <fstream>
 
 Uint32 my_callbackfunc(Uint32 interval, void *param)
 {
@@ -125,16 +128,58 @@ enum GameState
 	STATE_TITLE
 };
 
+void vgl_file_log(const char *format, ...) {
+	__gnuc_va_list arg;
+	va_start(arg, format);
+	char msg[512];
+	vsnprintf(msg, sizeof(msg), format, arg);
+	va_end(arg);
+	FILE *log = fopen("ux0:/data/vitaGL.log", "a+");
+	if (log != NULL) {
+		fwrite(msg, 1, strlen(msg), log);
+		fclose(log);
+	}
+}
+
 int main(int argc, char *argv[])
 {
-	FILE *dbgFile = fopen("ux0:/data/zgloom/debug.txt", "w");
+	// define vars for log and path variable 'selectedGame'
+	char buffer[2048];
+	memset(buffer, 0, 2048);
+	Config::isZM = "no ZM detected";
+	Config::selectedGame = "ux0:/data/ZGloom/GloomClassic";
+
+	// Check if any params are given
+	sceAppUtilInit(&(SceAppUtilInitParam){}, &(SceAppUtilBootParam){});
+	SceAppUtilAppEventParam eventParam;
+	sceClibMemset(&eventParam, 0, sizeof(SceAppUtilAppEventParam));
+	sceAppUtilReceiveAppEvent(&eventParam);
+	if (eventParam.type == 0x05) {
+		sceAppUtilAppEventParseLiveArea(&eventParam, buffer);
+		// set the appropriate game paths defined by param in Livearea - else launch Gloom Classic
+		if (strstr(buffer, "gloomdeluxe")) Config::selectedGame = "ux0:/data/ZGloom/GloomDeluxe";
+		else if (strstr(buffer, "gloom3")) Config::selectedGame = "ux0:/data/ZGloom/Gloom3";
+		else if (strstr(buffer, "zombiemassacre")) Config::selectedGame = "ux0:/data/ZGloom/ZombieMassacre";
+	} else { Config::selectedGame = "ux0:/data/ZGloom/GloomClassic"; }
+
+	FILE *dbgFile = fopen("ux0:/data/ZGloom/debug.txt", "w");
 	/* AUTODETECT ZM FIRST!*/
-	if (FILE *file = fopen("ux0:/data/zgloom/stuf/stages", "r"))
+	if (Config::selectedGame == "ux0:/data/ZGloom/ZombieMassacre") // check if game is selected in livearea first to avoid errors with other games
 	{
-		fputs("detected ZM", dbgFile);
-		fclose(file);
-		Config::SetZM(true);
+		if (FILE *file = fopen("ux0:/data/ZGloom/ZombieMassacre/stuf/stages", "r")) // check if ZM directory is existing
+		{
+			Config::isZM = "ZM detected";
+			fputs("detected ZM", dbgFile);
+			fclose(file);
+			Config::SetZM(true);
+		}
 	}
+
+	// Log file output to be sure params are being read
+//	vgl_file_log("\n---ZGLOOM");
+//	vgl_file_log("\nbuffer: %s", buffer);
+//	vgl_file_log("\nstring: %s", Config::selectedGame.c_str());
+//	vgl_file_log("\nstring: %s", Config::isZM.c_str());
 
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 	{
@@ -552,7 +597,7 @@ int main(int argc, char *argv[])
 					break;
 				}
 			}
-			if (Input::GetButtonDown(SCE_CTRL_START))
+			if ((state == STATE_PLAYING) && Input::GetButtonDown(SCE_CTRL_START))
 			{
 				state = STATE_MENU;
 			}
