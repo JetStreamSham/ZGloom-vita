@@ -604,7 +604,7 @@ int main(int argc, char *argv[])
 
 
 
-			if (Input::GetButtonDown(SCE_CTRL_SELECT))
+			if ((state == STATE_PLAYING) && Input::GetButtonDown(SCE_CTRL_SELECT))
 			{
 				Config::SetDebug(!Config::GetDebug());
 			}
