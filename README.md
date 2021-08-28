@@ -34,8 +34,8 @@ ZGloom can now add in-game music using any module that XMP can play. Put the mod
 4. Compile with `make`.
 
 # TODO
-Change renderer
-Perhaps a launcher for all Gloom versons
+Change renderer<br>
+Perhaps a launcher for all Gloom versions?
 
 # License
 
