@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<livearea style="a1" format-ver="01.00" content-rev="1">
+<livearea style="a2" format-ver="01.00" content-rev="1">
 	<livearea-background>
 		<image>bg.png</image>
 	</livearea-background>
@@ -8,4 +8,29 @@
 	<gate>
 		<startup-image>startup.png</startup-image>
 	</gate>
+	
+	<frame id='frame1' multi='o' autoflip='3' >
+		<liveitem>
+<!--			<target>psla:gloomdeluxe</target> -->
+			<target>https://www.lemonamiga.com/games/details.php?id=1407</target>
+			<image align="right" valign="bottom">gloomdeluxe.png</image>
+		</liveitem>
+	</frame>
+	
+	<frame id='frame2' multi='o' autoflip='3' >
+		<liveitem>
+<!--			<target>psla:zombiemassacre</target> -->
+			<target>https://www.lemonamiga.com/games/details.php?id=4603</target>
+			<image align="left" valign="bottom">zombiemassacre.png</image>
+		</liveitem>
+	</frame>
+
+	<frame id='frame3' multi='o' autoflip='3' >
+		<liveitem>
+<!-- 			<target>psla:gloom3</target> -->
+			<target>https://www.lemonamiga.com/games/details.php?id=2150</target>
+			<image valign="bottom">gloom3.png</image>
+		</liveitem>
+	</frame>
+
 </livearea>

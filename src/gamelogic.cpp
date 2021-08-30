@@ -4,6 +4,7 @@
 #include "hud.h"
 #include "config.h"
 #include <psp2/kernel/clib.h> 
+
 void GameLogic::Init(ObjectGraphics *ograph)
 {
 	// note weird order of SFX.
@@ -922,7 +923,6 @@ bool GameLogic::Update(Camera *cam)
 				}
 			}
 		}
-
 
 		CheckSuck(cam);
 

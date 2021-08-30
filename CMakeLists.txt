@@ -8,12 +8,12 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(ZGloom)
+project(ZGloomVita)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
-set(VITA_APP_NAME "ZGloom")
+set(VITA_APP_NAME "ZGloomVita")
 set(VITA_TITLEID  "JETSGLOOM")
-set(VITA_VERSION  "01.00")
+set(VITA_VERSION  "01.02")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fpermissive")
@@ -87,15 +87,31 @@ target_link_libraries(${PROJECT_NAME}
   SceHid_stub
   SceMotion_stub
   SceLibKernel_stub 
-
 )
 
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
 vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   VERSION ${VITA_VERSION}
   NAME ${VITA_APP_NAME}
+  FILE sce_sys/manual/001.png sce_sys/manual/001.png
+  FILE sce_sys/manual/002.png sce_sys/manual/002.png
+  FILE sce_sys/manual/003.png sce_sys/manual/003.png
+  FILE sce_sys/manual/004.png sce_sys/manual/004.png
+  FILE sce_sys/manual/005.png sce_sys/manual/005.png
+  FILE sce_sys/manual/006.png sce_sys/manual/006.png
+  FILE sce_sys/manual/007.png sce_sys/manual/007.png
+  FILE sce_sys/manual/008.png sce_sys/manual/008.png
+  FILE sce_sys/manual/009.png sce_sys/manual/009.png
+  FILE sce_sys/manual/010.png sce_sys/manual/010.png
+  FILE sce_sys/manual/011.png sce_sys/manual/011.png
+  FILE sce_sys/manual/012.png sce_sys/manual/012.png
+  FILE sce_sys/param.sfo sce_sys/param.sfo
   FILE sce_sys/icon0.png sce_sys/icon0.png
+  FILE sce_sys/pic0.png sce_sys/pic0.png
   FILE sce_sys/livearea/contents/bg.png sce_sys/livearea/contents/bg.png
   FILE sce_sys/livearea/contents/startup.png sce_sys/livearea/contents/startup.png
+  FILE sce_sys/livearea/contents/gloomdeluxe.png sce_sys/livearea/contents/gloomdeluxe.png
+  FILE sce_sys/livearea/contents/gloom3.png sce_sys/livearea/contents/gloom3.png
+  FILE sce_sys/livearea/contents/zombiemassacre.png sce_sys/livearea/contents/zombiemassacre.png
   FILE sce_sys/livearea/contents/template.xml sce_sys/livearea/contents/template.xml
 )
