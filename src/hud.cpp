@@ -367,7 +367,7 @@ void Hud::Render(SDL_Surface* surface, MapObject& player, Font& font)
 		pos += std::to_string(player.data.ms.rotquick.GetInt());
 
 		fps += std::to_string(Config::GetFPS());
-		//rot += std::to_string(Input::GetRightStick().x);
+		rot += std::to_string(Input::GetRightStick().x);
 
 		font.PrintMessage(pos, 0, surface, 1);
 		font.PrintMessage(fps,10, surface, 1);
