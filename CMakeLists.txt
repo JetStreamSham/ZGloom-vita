@@ -87,6 +87,7 @@ target_link_libraries(${PROJECT_NAME}
   SceHid_stub
   SceMotion_stub
   SceAppUtil_stub
+  SceLibKernel_stub
 )
 
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
