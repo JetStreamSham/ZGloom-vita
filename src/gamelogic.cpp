@@ -3,6 +3,7 @@
 #include "monsterlogic.h"
 #include "hud.h"
 #include "config.h"
+#include <psp2/kernel/clib.h>
 
 void GameLogic::Init(ObjectGraphics *ograph)
 {
@@ -921,22 +922,6 @@ bool GameLogic::Update(Camera *cam)
 					squished = true;
 				}
 			}
-		}
-
-		//gamepad control
-
-		Input::Stick rot = Input::GetRightStick();
-		char rdeadzone = Config::GetRightStickDeadzone();
-
-		rot.x -= 125;
-
-		if (rot.x < rdeadzone)
-		{
-			cam->rotquick.SetVal(cam->rotquick.GetVal() - abs(rot.x) * 100);
-		}
-		else if (rot.x > rdeadzone)
-		{
-			cam->rotquick.SetVal(cam->rotquick.GetVal() + rot.x * 100);
 		}
 
 		CheckSuck(cam);
