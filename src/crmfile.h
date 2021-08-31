@@ -29,7 +29,7 @@ class CrmFile
 
 			if (file == 0)
 			{
-				printf("Could not open input file %s\n", name);
+				printf("\nCould not open input file %s\n", name);
 				return false;
 			}
 

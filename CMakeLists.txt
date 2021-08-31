@@ -8,10 +8,10 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
   endif()
 endif()
 
-project(ZGloomVita)
+project(ZGloom)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
 
-set(VITA_APP_NAME "ZGloomVita")
+set(VITA_APP_NAME "ZGloom")
 set(VITA_TITLEID  "JETSGLOOM")
 set(VITA_VERSION  "01.02")
 
@@ -76,6 +76,9 @@ target_link_libraries(${PROJECT_NAME}
   vorbis
   ogg
   xmp
+  SceSysmodule_stub 
+  SceAppUtil_stub 
+  SceLibKernel_stub 
   SceDisplay_stub
   SceCtrl_stub
   SceAudio_stub
@@ -86,7 +89,6 @@ target_link_libraries(${PROJECT_NAME}
   SceTouch_stub
   SceHid_stub
   SceMotion_stub
-  SceLibKernel_stub 
 )
 
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
