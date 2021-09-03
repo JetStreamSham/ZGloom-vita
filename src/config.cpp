@@ -8,11 +8,22 @@
 #include <SDL2/SDL_mixer.h>
 #include <iostream>
 #include <fstream>
+#include <psp2/kernel/clib.h>
 
 namespace Config
 {
 	static bool zombiemassacremode = false;
 
+	// set parameter string for launcher selection
+	static std::string selectedGame = "";
+	static GameTitle gameID = GameTitle::GLOOM;
+	static char *gamePaths[5] = {
+		"ux0:/data/ZGloom/gloom",
+		"ux0:/data/ZGloom/deluxe",
+		"ux0:/data/ZGloom/gloom3",
+		"ux0:/data/ZGloom/massacre",
+		"ux0:/data/ZGloom/",
+	};
 	static SceCtrlButtons configkeys[KEY_END];
 	static int renderwidth;
 	static int renderheight;
@@ -39,6 +50,20 @@ namespace Config
 	// needed to toggle fullscreen
 	static SDL_Window *win;
 
+	void SetGame(Config::GameTitle id)
+	{
+		gameID = id;
+		selectedGame = gamePaths[gameID];
+	}
+
+	int GetGameID()
+	{
+		return gameID;
+	}
+	std::string GetGamePath()
+	{
+		return selectedGame;
+	}
 	unsigned char GetRightStickDeadzone()
 	{
 		return rightStickDeadzone;
@@ -107,12 +132,12 @@ namespace Config
 	{
 		if (zombiemassacremode)
 		{
-			std::string result = "ux0:/data/zgloom/stuf/stages";
+			std::string result = selectedGame + "/stuf/stages";
 			return result;
 		}
 		else
 		{
-			std::string result = "ux0:/data/zgloom/misc/script";
+			std::string result = selectedGame + "/misc/script";
 			return result;
 		}
 	}
@@ -121,26 +146,27 @@ namespace Config
 	{
 		if (zombiemassacremode)
 		{
-			std::string result = "ux0:/data/zgloom/stuf/";
+			std::string result = selectedGame + "/stuf/";
 			return result;
 		}
 		else
 		{
-			std::string result = "ux0:/data/zgloom/misc/";
+			std::string result = selectedGame + "/misc/";
 			return result;
 		}
 	}
 
 	std::string GetPicsDir()
 	{
+		sceClibPrintf("sgDir: %s\n", selectedGame.c_str());
 		if (zombiemassacremode)
 		{
-			std::string result = "ux0:/data/zgloom/pixs/";
+			std::string result = selectedGame + "/pixs/";
 			return result;
 		}
 		else
 		{
-			std::string result = "ux0:/data/zgloom/pics/";
+			std::string result = selectedGame + "/pics/";
 			return result;
 		}
 	}
@@ -149,12 +175,12 @@ namespace Config
 	{
 		if (zombiemassacremode)
 		{
-			std::string result = "ux0:/data/zgloom/lvls/";
+			std::string result = selectedGame + "/lvls/";
 			return result;
 		}
 		else
 		{
-			std::string result = "ux0:/data/zgloom/maps/";
+			std::string result = selectedGame + "/maps/";
 			return result;
 		}
 	}
@@ -183,16 +209,16 @@ namespace Config
 		if (zombiemassacremode)
 		{
 			if (i == 0)
-				result = "ux0:/data/zgloom/musi/meda";
+				result = selectedGame + "/musi/meda";
 			else
-				result = "ux0:/data/zgloom/musi/medb";
+				result = selectedGame + "/musi/medb";
 		}
 		else
 		{
 			if (i == 0)
-				result = "ux0:/data/zgloom/sfxs/med1";
+				result = selectedGame + "/sfxs/med1";
 			else
-				result = "ux0:/data/zgloom/sfxs/med2";
+				result = selectedGame + "/sfxs/med2";
 		}
 
 		return result;
@@ -203,11 +229,11 @@ namespace Config
 		std::string result;
 		if (zombiemassacremode)
 		{
-			result = "ux0:/data/zgloom/musi/"; 
+			result = selectedGame + "/musi/";
 		}
 		else
 		{
-			result = "ux0:/data/zgloom/sfxs/"; 
+			result = selectedGame + "/sfxs/";
 		}
 
 		return result;
@@ -228,81 +254,80 @@ namespace Config
 		if (zombiemassacremode)
 		{
 			// some of this is guesswork, need to check
-			objectfilenames[ObjectGraphics::OGT_TOKENS] = "ux0:/data/zgloom/char/pwrups";
-			objectfilenames[ObjectGraphics::OGT_MARINE] = "ux0:/data/zgloom/char/troopr";
-			objectfilenames[ObjectGraphics::OGT_BALDY] = "ux0:/data/zgloom/char/zombi";
-			objectfilenames[ObjectGraphics::OGT_TERRA] = "ux0:/data/zgloom/char/fatzo";
-			objectfilenames[ObjectGraphics::OGT_PHANTOM] = "ux0:/data/zgloom/char/zomboid";
-			objectfilenames[ObjectGraphics::OGT_GHOUL] = "ux0:/data/zgloom/char/ghost";
-			objectfilenames[ObjectGraphics::OGT_DRAGON] = "ux0:/data/zgloom/char/zombie";
-			objectfilenames[ObjectGraphics::OGT_LIZARD] = "ux0:/data/zgloom/char/skinny";
-			objectfilenames[ObjectGraphics::OGT_DEMON] = "ux0:/data/zgloom/char/zocom";
-			objectfilenames[ObjectGraphics::OGT_DEATHHEAD] = "ux0:/data/zgloom/char/dows-head";
-			objectfilenames[ObjectGraphics::OGT_TROLL] = "ux0:/data/zgloom/char/james";
+			objectfilenames[ObjectGraphics::OGT_TOKENS] = selectedGame + "/char/pwrups";
+			objectfilenames[ObjectGraphics::OGT_MARINE] = selectedGame + "/char/troopr";
+			objectfilenames[ObjectGraphics::OGT_BALDY] = selectedGame + "/char/zombi";
+			objectfilenames[ObjectGraphics::OGT_TERRA] = selectedGame + "/char/fatzo";
+			objectfilenames[ObjectGraphics::OGT_PHANTOM] = selectedGame + "/char/zomboid";
+			objectfilenames[ObjectGraphics::OGT_GHOUL] = selectedGame + "/char/ghost";
+			objectfilenames[ObjectGraphics::OGT_DRAGON] = selectedGame + "/char/zombie";
+			objectfilenames[ObjectGraphics::OGT_LIZARD] = selectedGame + "/char/skinny";
+			objectfilenames[ObjectGraphics::OGT_DEMON] = selectedGame + "/char/zocom";
+			objectfilenames[ObjectGraphics::OGT_DEATHHEAD] = selectedGame + "/char/dows-head";
+			objectfilenames[ObjectGraphics::OGT_TROLL] = selectedGame + "/char/james";
 
 			//double check these
-			soundfilenames[SoundHandler::SOUND_SHOOT] = "ux0:/data/zgloom/musi/shoot.bin";
-			soundfilenames[SoundHandler::SOUND_SHOOT2] = "ux0:/data/zgloom/musi/shoot2.bin";
-			soundfilenames[SoundHandler::SOUND_SHOOT3] = "ux0:/data/zgloom/musi/shoot3.bin";
-			soundfilenames[SoundHandler::SOUND_SHOOT4] = "ux0:/data/zgloom/musi/shoot4.bin";
-			soundfilenames[SoundHandler::SOUND_SHOOT5] = "ux0:/data/zgloom/musi/shoot5.bin";
-			soundfilenames[SoundHandler::SOUND_GRUNT] = "ux0:/data/zgloom/musi/groan.bin";
-			soundfilenames[SoundHandler::SOUND_GRUNT2] = "ux0:/data/zgloom/musi/groan2.bin";
-			soundfilenames[SoundHandler::SOUND_GRUNT3] = "ux0:/data/zgloom/musi/groan3.bin";
-			soundfilenames[SoundHandler::SOUND_GRUNT4] = "ux0:/data/zgloom/musi/groan4.bin";
-			soundfilenames[SoundHandler::SOUND_TOKEN] = "ux0:/data/zgloom/musi/pwrup.bin";
-			soundfilenames[SoundHandler::SOUND_DOOR] = "ux0:/data/zgloom/musi/door.bin";
-			soundfilenames[SoundHandler::SOUND_FOOTSTEP] = "ux0:/data/zgloom/musi/footstep.bin";
-			soundfilenames[SoundHandler::SOUND_DIE] = "ux0:/data/zgloom/musi/die.bin";
-			soundfilenames[SoundHandler::SOUND_SPLAT] = "ux0:/data/zgloom/musi/splat.bin";
-			soundfilenames[SoundHandler::SOUND_TELEPORT] = "ux0:/data/zgloom/musi/teleport.bin";
-			soundfilenames[SoundHandler::SOUND_GHOUL] = "ux0:/data/zgloom/musi/ghost.bin";
-			soundfilenames[SoundHandler::SOUND_LIZARD] = "ux0:/data/zgloom/musi/skinny.bin";
-			soundfilenames[SoundHandler::SOUND_LIZHIT] = "ux0:/data/zgloom/musi/skihit.bin";
-			soundfilenames[SoundHandler::SOUND_TROLLMAD] = "ux0:/data/zgloom/musi/jamesmad.bin";
-			soundfilenames[SoundHandler::SOUND_TROLLHIT] = "ux0:/data/zgloom/musi/jameshit.bin";
-			soundfilenames[SoundHandler::SOUND_ROBOT] = "ux0:/data/zgloom/musi/fatzo.bin";
-			soundfilenames[SoundHandler::SOUND_ROBODIE] = "ux0:/data/zgloom/musi/fatzdie.bin";
-			soundfilenames[SoundHandler::SOUND_DRAGON] = "ux0:/data/zgloom/musi/zombie.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT] = selectedGame + "/musi/shoot.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT2] = selectedGame + "/musi/shoot2.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT3] = selectedGame + "/musi/shoot3.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT4] = selectedGame + "/musi/shoot4.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT5] = selectedGame + "/musi/shoot5.bin";
+			soundfilenames[SoundHandler::SOUND_GRUNT] = selectedGame + "/musi/groan.bin";
+			soundfilenames[SoundHandler::SOUND_GRUNT2] = selectedGame + "/musi/groan2.bin";
+			soundfilenames[SoundHandler::SOUND_GRUNT3] = selectedGame + "/musi/groan3.bin";
+			soundfilenames[SoundHandler::SOUND_GRUNT4] = selectedGame + "/musi/groan4.bin";
+			soundfilenames[SoundHandler::SOUND_TOKEN] = selectedGame + "/musi/pwrup.bin";
+			soundfilenames[SoundHandler::SOUND_DOOR] = selectedGame + "/musi/door.bin";
+			soundfilenames[SoundHandler::SOUND_FOOTSTEP] = selectedGame + "/musi/footstep.bin";
+			soundfilenames[SoundHandler::SOUND_DIE] = selectedGame + "/musi/die.bin";
+			soundfilenames[SoundHandler::SOUND_SPLAT] = selectedGame + "/musi/splat.bin";
+			soundfilenames[SoundHandler::SOUND_TELEPORT] = selectedGame + "/musi/teleport.bin";
+			soundfilenames[SoundHandler::SOUND_GHOUL] = selectedGame + "/musi/ghost.bin";
+			soundfilenames[SoundHandler::SOUND_LIZARD] = selectedGame + "/musi/skinny.bin";
+			soundfilenames[SoundHandler::SOUND_LIZHIT] = selectedGame + "/musi/skihit.bin";
+			soundfilenames[SoundHandler::SOUND_TROLLMAD] = selectedGame + "/musi/jamesmad.bin";
+			soundfilenames[SoundHandler::SOUND_TROLLHIT] = selectedGame + "/musi/jameshit.bin";
+			soundfilenames[SoundHandler::SOUND_ROBOT] = selectedGame + "/musi/fatzo.bin";
+			soundfilenames[SoundHandler::SOUND_ROBODIE] = selectedGame + "/musi/fatzdie.bin";
+			soundfilenames[SoundHandler::SOUND_DRAGON] = selectedGame + "/musi/zombie.bin";
 		}
 		else
 		{
-			objectfilenames[ObjectGraphics::OGT_TOKENS] = "ux0:/data/zgloom/objs/tokens";
-			objectfilenames[ObjectGraphics::OGT_MARINE] = "ux0:/data/zgloom/objs/marine";
-			objectfilenames[ObjectGraphics::OGT_BALDY] = "ux0:/data/zgloom/objs/baldy";
-			objectfilenames[ObjectGraphics::OGT_TERRA] = "ux0:/data/zgloom/objs/terra";
-			objectfilenames[ObjectGraphics::OGT_PHANTOM] = "ux0:/data/zgloom/objs/phantom";
-			objectfilenames[ObjectGraphics::OGT_GHOUL] = "ux0:/data/zgloom/objs/ghoul";
-			objectfilenames[ObjectGraphics::OGT_DRAGON] = "ux0:/data/zgloom/objs/dragon";
-			objectfilenames[ObjectGraphics::OGT_LIZARD] = "ux0:/data/zgloom/objs/lizard";
-			objectfilenames[ObjectGraphics::OGT_DEMON] = "ux0:/data/zgloom/objs/demon";
-			objectfilenames[ObjectGraphics::OGT_DEATHHEAD] = "ux0:/data/zgloom/objs/deathhead";
-			objectfilenames[ObjectGraphics::OGT_TROLL] = "ux0:/data/zgloom/objs/troll";
+			objectfilenames[ObjectGraphics::OGT_TOKENS] = selectedGame + "/objs/tokens";
+			objectfilenames[ObjectGraphics::OGT_MARINE] = selectedGame + "/objs/marine";
+			objectfilenames[ObjectGraphics::OGT_BALDY] = selectedGame + "/objs/baldy";
+			objectfilenames[ObjectGraphics::OGT_TERRA] = selectedGame + "/objs/terra";
+			objectfilenames[ObjectGraphics::OGT_PHANTOM] = selectedGame + "/objs/phantom";
+			objectfilenames[ObjectGraphics::OGT_GHOUL] = selectedGame + "/objs/ghoul";
+			objectfilenames[ObjectGraphics::OGT_DRAGON] = selectedGame + "/objs/dragon";
+			objectfilenames[ObjectGraphics::OGT_LIZARD] = selectedGame + "/objs/lizard";
+			objectfilenames[ObjectGraphics::OGT_DEMON] = selectedGame + "/objs/demon";
+			objectfilenames[ObjectGraphics::OGT_DEATHHEAD] = selectedGame + "/objs/deathhead";
+			objectfilenames[ObjectGraphics::OGT_TROLL] = selectedGame + "/objs/troll";
 
-
-			soundfilenames[SoundHandler::SOUND_SHOOT] = "ux0:/data/zgloom/sfxs/shoot.bin";
-			soundfilenames[SoundHandler::SOUND_SHOOT2] = "ux0:/data/zgloom/sfxs/shoot2.bin";
-			soundfilenames[SoundHandler::SOUND_SHOOT3] = "ux0:/data/zgloom/sfxs/shoot3.bin";
-			soundfilenames[SoundHandler::SOUND_SHOOT4] = "ux0:/data/zgloom/sfxs/shoot4.bin";
-			soundfilenames[SoundHandler::SOUND_SHOOT5] = "ux0:/data/zgloom/sfxs/shoot5.bin";
-			soundfilenames[SoundHandler::SOUND_GRUNT] = "ux0:/data/zgloom/sfxs/grunt.bin";
-			soundfilenames[SoundHandler::SOUND_GRUNT2] = "ux0:/data/zgloom/sfxs/grunt2.bin";
-			soundfilenames[SoundHandler::SOUND_GRUNT3] = "ux0:/data/zgloom/sfxs/grunt3.bin";
-			soundfilenames[SoundHandler::SOUND_GRUNT4] = "ux0:/data/zgloom/sfxs/grunt4.bin";
-			soundfilenames[SoundHandler::SOUND_TOKEN] = "ux0:/data/zgloom/sfxs/token.bin";
-			soundfilenames[SoundHandler::SOUND_DOOR] = "ux0:/data/zgloom/sfxs/door.bin";
-			soundfilenames[SoundHandler::SOUND_FOOTSTEP] = "ux0:/data/zgloom/sfxs/footstep.bin";
-			soundfilenames[SoundHandler::SOUND_DIE] = "ux0:/data/zgloom/sfxs/die.bin";
-			soundfilenames[SoundHandler::SOUND_SPLAT] = "ux0:/data/zgloom/sfxs/splat.bin";
-			soundfilenames[SoundHandler::SOUND_TELEPORT] = "ux0:/data/zgloom/sfxs/teleport.bin";
-			soundfilenames[SoundHandler::SOUND_GHOUL] = "ux0:/data/zgloom/sfxs/ghoul.bin";
-			soundfilenames[SoundHandler::SOUND_LIZARD] = "ux0:/data/zgloom/sfxs/lizard.bin";
-			soundfilenames[SoundHandler::SOUND_LIZHIT] = "ux0:/data/zgloom/sfxs/lizhit.bin";
-			soundfilenames[SoundHandler::SOUND_TROLLMAD] = "ux0:/data/zgloom/sfxs/trollmad.bin";
-			soundfilenames[SoundHandler::SOUND_TROLLHIT] = "ux0:/data/zgloom/sfxs/trollhit.bin";
-			soundfilenames[SoundHandler::SOUND_ROBOT] = "ux0:/data/zgloom/sfxs/robot.bin";
-			soundfilenames[SoundHandler::SOUND_ROBODIE] = "ux0:/data/zgloom/sfxs/robodie.bin";
-			soundfilenames[SoundHandler::SOUND_DRAGON] = "ux0:/data/zgloom/sfxs/dragon.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT] = selectedGame + "/sfxs/shoot.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT2] = selectedGame + "/sfxs/shoot2.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT3] = selectedGame + "/sfxs/shoot3.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT4] = selectedGame + "/sfxs/shoot4.bin";
+			soundfilenames[SoundHandler::SOUND_SHOOT5] = selectedGame + "/sfxs/shoot5.bin";
+			soundfilenames[SoundHandler::SOUND_GRUNT] = selectedGame + "/sfxs/grunt.bin";
+			soundfilenames[SoundHandler::SOUND_GRUNT2] = selectedGame + "/sfxs/grunt2.bin";
+			soundfilenames[SoundHandler::SOUND_GRUNT3] = selectedGame + "/sfxs/grunt3.bin";
+			soundfilenames[SoundHandler::SOUND_GRUNT4] = selectedGame + "/sfxs/grunt4.bin";
+			soundfilenames[SoundHandler::SOUND_TOKEN] = selectedGame + "/sfxs/token.bin";
+			soundfilenames[SoundHandler::SOUND_DOOR] = selectedGame + "/sfxs/door.bin";
+			soundfilenames[SoundHandler::SOUND_FOOTSTEP] = selectedGame + "/sfxs/footstep.bin";
+			soundfilenames[SoundHandler::SOUND_DIE] = selectedGame + "/sfxs/die.bin";
+			soundfilenames[SoundHandler::SOUND_SPLAT] = selectedGame + "/sfxs/splat.bin";
+			soundfilenames[SoundHandler::SOUND_TELEPORT] = selectedGame + "/sfxs/teleport.bin";
+			soundfilenames[SoundHandler::SOUND_GHOUL] = selectedGame + "/sfxs/ghoul.bin";
+			soundfilenames[SoundHandler::SOUND_LIZARD] = selectedGame + "/sfxs/lizard.bin";
+			soundfilenames[SoundHandler::SOUND_LIZHIT] = selectedGame + "/sfxs/lizhit.bin";
+			soundfilenames[SoundHandler::SOUND_TROLLMAD] = selectedGame + "/sfxs/trollmad.bin";
+			soundfilenames[SoundHandler::SOUND_TROLLHIT] = selectedGame + "/sfxs/trollhit.bin";
+			soundfilenames[SoundHandler::SOUND_ROBOT] = selectedGame + "/sfxs/robot.bin";
+			soundfilenames[SoundHandler::SOUND_ROBODIE] = selectedGame + "/sfxs/robodie.bin";
+			soundfilenames[SoundHandler::SOUND_DRAGON] = selectedGame + "/sfxs/dragon.bin";
 		}
 
 		configkeys[KEY_SHOOT] = SCE_CTRL_CROSS;
@@ -337,14 +362,15 @@ namespace Config
 
 		std::ifstream file;
 
-		file.open("ux0:/data/zgloom/config.txt");
+//		file.open(selectedGame + "/config.txt"); // old code
+		file.open("ux0:/data/ZGloom/config.txt");
 
 		if (file.is_open())
 		{
 			while (!file.eof())
 			{
 				std::string line;
-					
+
 				std::getline(file, line);
 
 				if (line.size() && (line[0] != ';'))
@@ -436,7 +462,7 @@ namespace Config
 
 	void SetKey(keyenum k, int newval)
 	{
-		configkeys[k] = newval; 
+		configkeys[k] = newval;
 	}
 
 	int GetMouseSens()
@@ -516,7 +542,8 @@ namespace Config
 
 		std::ofstream file;
 
-		file.open("ux0:/data/zgloom/config.txt");
+//		file.open(selectedGame + "/config.txt"); // old code
+		file.open("ux0:/data/ZGloom/config.txt");
 
 		if (file.is_open())
 		{
@@ -537,40 +564,40 @@ namespace Config
 
 			file << "\n";
 
-			file << ";The size of the game render bitmap. Bumping this up may lead to more overflow issues in the renderer. But you can get, say, 16:9 by using 460x256 or something in a larger window\n";
+			file << "\n;The size of the game render bitmap.\n;Bumping this up may lead to more overflow issues in the renderer.\n;But you can get, say, 16:9 by using 460x256 or something in a larger window.\n";
 			file << "rendersize " << renderwidth << " " << renderheight << "\n";
 
-			file << ";The size of the actual window/fullscreen res. Guess this should be a multiple of the above for pixel perfect\n";
+			file << "\n;The size of the actual window/fullscreen res.\n;Guess this should be a multiple of the above for pixel perfect.\n";
 			file << "windowsize " << windowwidth << " " << windowheight << "\n";
 
-			file << ";vsync on or off?\n";
+			file << "\n;VSync on or off?\n";
 			file << "vsync " << (vsync ? 1 : 0) << "\n";
 
-			file << ";fullscreen on or off?\n";
+			file << "\n;Fullscreen on or off?\n";
 			file << "fullscreen " << (fullscreen ? 1 : 0) << "\n";
 
-			file << ";focal length. Original used 128 for a 320x256 display, bump this up for higher resolution. Rule of thumb: for 90degree fov, = renderwidth/2\n";
+			file << "\n;Focal length. Original used 128 for a 320x256 display.\n;Bump this up for higher resolution. Rule of thumb: for 90degree fov, = renderwidth/2\n";
 			file << "focallength " << focallength << "\n";
 
-			file << ";Mouse sensitivity\n";
+			file << "\n;Mouse sensitivity\n";
 			file << "mousesensitivity " << mousesens << "\n";
 
-			file << ";size of blood splatters in pixels\n";
+			file << "\n;Size of blood splatters in pixels\n";
 			file << "bloodsize " << bloodsize << "\n";
 
-			file << ";audio volumes\n";
+			file << "\n;Audio volumes\n";
 			file << "sfxvol " << sfxvol << "\n";
 			file << "musvol " << musvol << "\n";
 
-			file << ";multithreaded renderer (somewhat experimental)\n";
+			file << "\n;Multithreaded renderer (somewhat experimental)\n;Has to be enabled for PS Vita.\n";
 			file << "multithread " << (multithread ? 1 : 0) << "\n";
 
-			file << ";rapidfire?\n";
+			file << "\n;Rapidfire?\n";
 			file << "autofire " << (autofire ? 1 : 0) << "\n";
 
-			file << ";rightStickDeadzone\n";
+			file << "\n;RightStickDeadzone\n";
 			file << "rightStickDeadzone " << rightStickDeadzone << "\n";
-			file << ";leftStickDeadzone\n";
+			file << "\n;LeftStickDeadzone\n";
 			file << "leftStickDeadzone " << leftStickDeadzone << "\n";
 
 			file.close();

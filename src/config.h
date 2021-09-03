@@ -24,12 +24,18 @@ namespace Config
 		KEY_END
 	};
 
-	// set parameter string for launcher selection
-	static std::string selectedGame = "";
-	// set parameter for log validator for Zombie Massacre
-	static std::string isZM = "";
-
+	enum GameTitle 
+	{
+		GLOOM,
+		DELUXE,
+		GLOOM3,
+		MASSACRE,
+		CUSTOM,
+	};
 	void SetZM(bool zm);
+	void SetGame(Config::GameTitle id);
+	int GetGameID();
+	std::string GetGamePath();
 	std::string GetScriptName();
 	std::string GetPicsDir();
 	std::string GetLevelDir();

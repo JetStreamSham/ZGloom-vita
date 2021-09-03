@@ -1,10 +1,14 @@
 // zgloom.cpp : Defines the entry point for the console application.
 //
-#include <psp2/kernel/clib.h> 
-#include <psp2/apputil.h> 
+#include <psp2/sysmodule.h>
+#include <psp2/kernel/clib.h>
+#include <psp2/apputil.h>
 #include <psp2/ctrl.h>
 #include <psp2/kernel/threadmgr.h>
 #include <psp2/kernel/processmgr.h>
+#include <psp2/kernel/clib.h>
+#include <psp2/io/dirent.h>
+
 #include <stdio.h>
 #include <xmp.h>
 #include <SDL2/SDL.h>
@@ -128,14 +132,16 @@ enum GameState
 	STATE_TITLE
 };
 
-void vgl_file_log(const char *format, ...) {
+void vgl_file_log(const char *format, ...)
+{
 	__gnuc_va_list arg;
 	va_start(arg, format);
 	char msg[512];
 	vsnprintf(msg, sizeof(msg), format, arg);
 	va_end(arg);
 	FILE *log = fopen("ux0:/data/vitaGL.log", "a+");
-	if (log != NULL) {
+	if (log != NULL)
+	{
 		fwrite(msg, 1, strlen(msg), log);
 		fclose(log);
 	}
@@ -143,49 +149,72 @@ void vgl_file_log(const char *format, ...) {
 
 int main(int argc, char *argv[])
 {
+	sceClibPrintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	// define vars for log and path variable 'selectedGame'
 	char buffer[2048];
 	memset(buffer, 0, 2048);
-	Config::isZM = "no ZM detected";
-	Config::selectedGame = "ux0:/data/ZGloom/GloomClassic";
 
 	// Check if any params are given
 	sceAppUtilInit(&(SceAppUtilInitParam){}, &(SceAppUtilBootParam){});
 	SceAppUtilAppEventParam eventParam;
 	sceClibMemset(&eventParam, 0, sizeof(SceAppUtilAppEventParam));
 	sceAppUtilReceiveAppEvent(&eventParam);
-	if (eventParam.type == 0x05) {
+	sceClibPrintf("\nEventType:%d\n",eventParam.type);
+	if (eventParam.type == 0x05)
+	{
 		sceAppUtilAppEventParseLiveArea(&eventParam, buffer);
 		// set the appropriate game paths defined by param in Livearea - else launch Gloom Classic
-		if (strstr(buffer, "gloomdeluxe")) Config::selectedGame = "ux0:/data/ZGloom/GloomDeluxe";
-		else if (strstr(buffer, "gloom3")) Config::selectedGame = "ux0:/data/ZGloom/Gloom3";
-		else if (strstr(buffer, "zombiemassacre")) Config::selectedGame = "ux0:/data/ZGloom/ZombieMassacre";
-	} else { Config::selectedGame = "ux0:/data/ZGloom/GloomClassic"; }
-
-	FILE *dbgFile = fopen("ux0:/data/ZGloom/debug.txt", "w");
-	/* AUTODETECT ZM FIRST!*/
-	if (Config::selectedGame == "ux0:/data/ZGloom/ZombieMassacre") // check if game is selected in livearea first to avoid errors with other games
-	{
-		if (FILE *file = fopen("ux0:/data/ZGloom/ZombieMassacre/stuf/stages", "r")) // check if ZM directory is existing
+		if (strstr(buffer, "deluxe"))
 		{
-			Config::isZM = "ZM detected";
-			fputs("detected ZM", dbgFile);
-			fclose(file);
+			sceClibPrintf("\ndeluxe");
+			Config::SetGame(Config::GameTitle::DELUXE);
+		}
+		else if (strstr(buffer, "gloom3"))
+		{
+			sceClibPrintf("\ngloom3");
+			Config::SetGame(Config::GameTitle::GLOOM3);
+		}
+		else if (strstr(buffer, "massacre"))
+		{
+			sceClibPrintf("\nmassacre");
+			Config::SetGame(Config::GameTitle::MASSACRE);
+		}
+	} else {
+		sceClibPrintf("default\n");
+		Config::SetGame(Config::GameTitle::GLOOM);
+	}
+
+	if (int dirID = sceIoDopen((Config::GetGamePath() ).c_str()) >= 0) // check if selected game dir exist
+	{
+		sceClibPrintf("\ngame dir exist:%s", Config::GetGamePath() .c_str());
+		sceIoDclose(dirID);
+	}
+	else
+	{
+		sceClibPrintf("\ngame dir does not exist:%s , dirID:%d\n", Config::GetGamePath() .c_str(),dirID);
+		sceIoDclose(dirID);
+		return 0;
+	}
+
+	// Log file output to be sure params are being read
+	//	vgl_file_log("\n---ZGLOOM");
+	//	vgl_file_log("\nbuffer: %s", buffer);
+	//	vgl_file_log("\nstring: %s", GetGamePath() .c_str());
+	//	vgl_file_log("\nstring: %s", Config::isZM.c_str());
+
+//	FILE *dbgFile = fopen("ux0:/data/ZGloom/debug.txt", "w");
+	/* AUTODETECT ZM FIRST!*/
+	if (strstr(buffer, "massacre")) {
+		if (FILE *file = fopen("ux0:/data/ZGloom/massacre/stuf/stages", "r")) // check if ZM directory is existing
+		{
+//			fputs("detected ZM", dbgFile);
+//			fclose(file);
 			Config::SetZM(true);
 		}
 	}
 
-	// Log file output to be sure params are being read
-//	vgl_file_log("\n---ZGLOOM");
-//	vgl_file_log("\nbuffer: %s", buffer);
-//	vgl_file_log("\nstring: %s", Config::selectedGame.c_str());
-//	vgl_file_log("\nstring: %s", Config::isZM.c_str());
-
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 	{
-		fputs("SDL_Init Error: ", dbgFile);
-		fputs(SDL_GetError(), dbgFile);
-		fputs("\n", dbgFile);
 		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
 		return 1;
 	}
@@ -282,11 +311,15 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	titlepic.Load((Config::GetPicsDir() + "title").c_str());
+	std::string titlepicString = Config::GetPicsDir() + "title";
+	bool success = titlepic.Load(titlepicString.c_str());
+	sceClibPrintf("Success:%d, title pic dir:%s\n",success,Config::GetPicsDir().c_str());
+	//return 0;
 
 	if (titlepic.data)
 	{
 		LoadPic(Config::GetPicsDir() + "title", titlebitmap);
+
 	}
 	else
 	{
@@ -504,7 +537,7 @@ int main(int argc, char *argv[])
 
 		if (state == STATE_TITLE)
 		{
-			SDL_SetPaletteColors(render8->format->palette, smallfont.GetPalette()->colors, 0, 16); // added for correct palette on titlescreen
+			SDL_SetPaletteColors(render8->format->palette, smallfont.GetPalette()->colors, 0, 16);		   // added for correct palette on titlescreen
 			SDL_SetPaletteColors(render8->format->palette, titlebitmap->format->palette->colors, 17, 256); // 256-16 colors should be enough
 			titlescreen.Render(titlebitmap, render8, smallfont);
 		}
@@ -601,8 +634,6 @@ int main(int argc, char *argv[])
 			{
 				state = STATE_MENU;
 			}
-
-
 
 			if ((state == STATE_PLAYING) && Input::GetButtonDown(SCE_CTRL_SELECT))
 			{
