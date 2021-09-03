@@ -149,52 +149,49 @@ void vgl_file_log(const char *format, ...)
 
 int main(int argc, char *argv[])
 {
+	sceClibPrintf("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
 	// define vars for log and path variable 'selectedGame'
 	char buffer[2048];
 	memset(buffer, 0, 2048);
-	Config::isZM = "no ZM detected";
-	Config::selectedGame = "ux0:/data/ZGloom/classic";
 
 	// Check if any params are given
 	sceAppUtilInit(&(SceAppUtilInitParam){}, &(SceAppUtilBootParam){});
 	SceAppUtilAppEventParam eventParam;
 	sceClibMemset(&eventParam, 0, sizeof(SceAppUtilAppEventParam));
 	sceAppUtilReceiveAppEvent(&eventParam);
+	sceClibPrintf("\nEventType:%d\n",eventParam.type);
 	if (eventParam.type == 0x05)
 	{
-		sceClibPrintf("\nEvent type 5");
 		sceAppUtilAppEventParseLiveArea(&eventParam, buffer);
 		// set the appropriate game paths defined by param in Livearea - else launch Gloom Classic
 		if (strstr(buffer, "deluxe"))
 		{
 			sceClibPrintf("\ndeluxe");
-			Config::selectedGame = "ux0:/data/ZGloom/deluxe";
+			Config::SetGame(Config::GameTitle::DELUXE);
 		}
 		else if (strstr(buffer, "gloom3"))
 		{
 			sceClibPrintf("\ngloom3");
-			Config::selectedGame = "ux0:/data/ZGloom/gloom3";
+			Config::SetGame(Config::GameTitle::GLOOM3);
 		}
 		else if (strstr(buffer, "massacre"))
 		{
 			sceClibPrintf("\nmassacre");
-			Config::selectedGame = "ux0:/data/ZGloom/massacre";
+			Config::SetGame(Config::GameTitle::MASSACRE);
 		}
-	}
-	else
-	{
-		sceClibPrintf("\nclassic");
-		Config::selectedGame = "ux0:/data/zgloom/classic";
+	} else {
+		sceClibPrintf("default\n");
+		Config::SetGame(Config::GameTitle::GLOOM);
 	}
 
-	if (int dirID = sceIoDopen((Config::selectedGame).c_str()) >= 0) // check if selected game dir exist
+	if (int dirID = sceIoDopen((Config::GetGamePath() ).c_str()) >= 0) // check if selected game dir exist
 	{
-		sceClibPrintf("\ngame dir exist:%s", Config::selectedGame.c_str());
+		sceClibPrintf("\ngame dir exist:%s", Config::GetGamePath() .c_str());
 		sceIoDclose(dirID);
 	}
 	else
 	{
-		sceClibPrintf("\ngame dir does not exist:%s , dirID:%d", Config::selectedGame.c_str(),dirID);
+		sceClibPrintf("\ngame dir does not exist:%s , dirID:%d\n", Config::GetGamePath() .c_str(),dirID);
 		sceIoDclose(dirID);
 		return 0;
 	}
@@ -202,7 +199,7 @@ int main(int argc, char *argv[])
 	// Log file output to be sure params are being read
 	//	vgl_file_log("\n---ZGLOOM");
 	//	vgl_file_log("\nbuffer: %s", buffer);
-	//	vgl_file_log("\nstring: %s", Config::selectedGame.c_str());
+	//	vgl_file_log("\nstring: %s", GetGamePath() .c_str());
 	//	vgl_file_log("\nstring: %s", Config::isZM.c_str());
 
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
@@ -303,9 +300,10 @@ int main(int argc, char *argv[])
 	}
 #endif
 
-	bool success = titlepic.Load((Config::GetPicsDir() + "title").c_str());
-	sceClibPrintf("Success:%d, title pic dir:%s",success,(Config::selectedGame).c_str());
-	return 0;
+	std::string titlepicString = Config::GetPicsDir() + "title";
+	bool success = titlepic.Load(titlepicString.c_str());
+	sceClibPrintf("Success:%d, title pic dir:%s\n",success,Config::GetPicsDir().c_str());
+	//return 0;
 
 	if (titlepic.data)
 	{

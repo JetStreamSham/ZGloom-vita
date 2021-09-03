@@ -182,7 +182,7 @@ void Zone::DumpDebug(FILE *fFile)
 
 void Texture::Load(const char *name)
 {
-	std::string fname = Config::selectedGame + "/txts/";
+	std::string fname = Config::GetGamePath() + "/txts/";
 
 	fname += name;
 
@@ -472,13 +472,13 @@ void GloomMap::SetFlat(char f)
 {
 	hasflat = true;
 
-	std::string name = Config::selectedGame + "/txts/floor";
+	std::string name = Config::GetGamePath() + "/txts/floor";
 
 	name += f + '0';
 
 	floor.Load(name.c_str());
 
-	name = Config::selectedGame + "/txts/roof";
+	name = Config::GetGamePath() + "/txts/roof";
 
 	name += f + '0';
 

@@ -14,6 +14,16 @@ namespace Config
 {
 	static bool zombiemassacremode = false;
 
+	// set parameter string for launcher selection
+	static std::string selectedGame = "";
+	static GameTitle gameID = GameTitle::GLOOM;
+	static char *gamePaths[5] = {
+		"ux0:/data/ZGloom/gloom",
+		"ux0:/data/ZGloom/deluxe",
+		"ux0:/data/ZGloom/gloom3",
+		"ux0:/data/ZGloom/massacre",
+		"ux0:/data/ZGloom/",
+	};
 	static SceCtrlButtons configkeys[KEY_END];
 	static int renderwidth;
 	static int renderheight;
@@ -40,6 +50,20 @@ namespace Config
 	// needed to toggle fullscreen
 	static SDL_Window *win;
 
+	void SetGame(Config::GameTitle id)
+	{
+		gameID = id;
+		selectedGame = gamePaths[gameID];
+	}
+
+	int GetGameID()
+	{
+		return gameID;
+	}
+	std::string GetGamePath()
+	{
+		return selectedGame;
+	}
 	unsigned char GetRightStickDeadzone()
 	{
 		return rightStickDeadzone;
@@ -134,9 +158,9 @@ namespace Config
 
 	std::string GetPicsDir()
 	{
+		sceClibPrintf("sgDir: %s\n", selectedGame.c_str());
 		if (zombiemassacremode)
 		{
-			sceClibPrintf("sgDir: %s",selectedGame);
 			std::string result = selectedGame + "/pixs/";
 			return result;
 		}
