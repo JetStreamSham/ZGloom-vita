@@ -12,10 +12,14 @@ A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetS
 ## How to play
 
 Gloom was made freely available by its developers [here](https://github.com/earok/GloomAmiga/archive/master.zip).<br>
-To play on PS VITA download the .zip, extract it somewhere to your harddrive and copy only the folders to the following location on vita:
-> ux0:/data/zgloom/ 
+For the other official games using the Black Magic "Gloom"-engine like [Gloom 3](http://aminet.net/package/game/shoot/UltimateGloomISO) or [Zombie Massacre](http://aminet.net/package/game/shoot/ZombieMassacreISO) you can load them for free on Aminet. Otherwise you can take the original game files from your game installation.
 
-For the other official games using the Black Magic "Gloom"-engine like [Gloom 3](http://aminet.net/package/game/shoot/UltimateGloomISO) and [Zombie Massacre](http://aminet.net/package/game/shoot/ZombieMassacreISO) you can load them for free on Aminet. At the moment only the `ux0:/data/zgloom` directory can be used, so if you have more than only "Gloom" be sure make separate directories like _ZGLoom3_ or _ZombieMassacre_ and rename them before playing.
+To play on PS VITA install the .vpk, download the .zip of the game(s) you want to play, extract them somewhere to your harddrive and copy only the folders (depending on the game) to the following locations on vita:
+
+> ux0:/data/zgloom/gloom <br>
+> ux0:/data/zgloom/deluxe <br>
+> ux0:/data/zgloom/gloom3 <br>
+> ux0:/data/zgloom/massacre
 
 ![Preview of Livearea](https://github.com/andiweli/ZGloom-vita/blob/master/images/gloom-livearea.png)
 
@@ -34,8 +38,7 @@ ZGloom can now add in-game music using any module that XMP can play. Put the mod
 4. Compile with `make`.
 
 # TODO
-Change renderer<br>
-Perhaps a launcher for all Gloom versions?
+Change renderer
 
 # License
 
