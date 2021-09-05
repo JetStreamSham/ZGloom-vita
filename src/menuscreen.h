@@ -57,7 +57,8 @@ private:
 		MENUSTATUS_KEYCONFIG,
 		MENUSTATUS_SOUNDOPTIONS,
 		MENUSTATUS_CONTROLOPTIONS,
-		MENUSTATUS_DISPLAYOPTIONS
+		MENUSTATUS_DISPLAYOPTIONS,
+		MENUSTATUS_CHEATOPTIONS
 	};
 
 	MENUSTATUS status;
@@ -75,5 +76,6 @@ private:
 	std::vector<MenuEntry> mainmenu;
 	std::vector<MenuEntry> controlmenu;
 	std::vector<MenuEntry> displaymenu;
+	std::vector<MenuEntry> cheatmenu; // cheatmode
 };
 

@@ -49,7 +49,7 @@ void TitleScreen::Render(SDL_Surface *src, SDL_Surface *dest, Font &font)
 
 		font.PrintMessage("PSVITA PORT BY JETSTREAMSHAM", 190, dest, 1); // added port
 		font.PrintMessage("BASED ON ZGLOOM BY SWIZPIG", 200, dest, 1); // added reimplementation
-		font.PrintMessage("ADDITIONAL GRAPHICS BY ANDIWELI", 210, dest, 1); // added "little helper"
+		font.PrintMessage("ADDITIONAL GRAPHICS AND CODE BY ANDIWELI", 210, dest, 1); // added "little helper"
 	}
 }
 

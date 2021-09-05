@@ -43,10 +43,21 @@ void GameLogic::Init(ObjectGraphics *ograph)
 		wtable[i].spark = &(ograph->SparkShapes[i]);
 	}
 
-	p1lives = 3;
-	p1health = 25;
-	p1weapon = 0;
+	// cheatmode
+	if (Config::GetUL()) p1lives = 32767;
+		else { p1lives = 3; }
+	if (Config::GetGM()) p1health = 32767;
+		else { p1health = 25; }
+	if (Config::GetMW()) p1weapon = 4;
+		else { p1weapon = 0; }
+	//--- 
+	
+	// original player1 params
+	// p1lives = 3;
+	// p1health = 25;
+	// p1weapon = 0;
 	p1reload = 5;
+	
 
 	playerhit = false;
 }
