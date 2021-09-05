@@ -44,20 +44,19 @@ void GameLogic::Init(ObjectGraphics *ograph)
 	}
 
 	// cheatmode
-	if (Config::GetUL()) p1lives = 32767;
-		else { p1lives = 3; }
+//	if (Config::GetUL()) p1lives = 1;
+//		else { p1lives = 0; }
 	if (Config::GetGM()) p1health = 32767;
 		else { p1health = 25; }
 	if (Config::GetMW()) p1weapon = 4;
 		else { p1weapon = 0; }
-	//--- 
-	
+	// --- original code below	
 	// original player1 params
-	// p1lives = 3;
 	// p1health = 25;
 	// p1weapon = 0;
+
+	p1lives = 3;
 	p1reload = 5;
-	
 
 	playerhit = false;
 }
@@ -65,7 +64,13 @@ void GameLogic::Init(ObjectGraphics *ograph)
 void GameLogic::ResetPlayer(MapObject &o)
 {
 	// reset the player on death
-	o.data.ms.hitpoints = 25;
+	
+	// cheatmode
+	if (Config::GetGM()) o.data.ms.hitpoints = 32767;
+		else { o.data.ms.hitpoints = 25; }
+	// --- original code below
+	// o.data.ms.hitpoints = 25;
+
 	o.data.ms.eyey = -110;
 	o.data.ms.logic = NullLogic;
 	//o.data.ms.colltype = 8;
