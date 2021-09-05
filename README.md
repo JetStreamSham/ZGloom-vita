@@ -4,8 +4,8 @@ A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.<
 A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetStreamSham](https://github.com/JetStreamSham)
 
 ## What's new?
-1. [JetStreamSham](https://github.com/JetStreamSham/ZGloom-vita) added a launcher to the game to have all Gloom-Engine games available
-2. I added a cheat menu into the game menu to set invinite health, lives and maxed weapon at start
+1. added a launcher to the game to have all Gloom-Engine games available
+2. added a cheat menu into the game menu to set invinite health photon weapon at start
 
 ## What is Gloom?
 
