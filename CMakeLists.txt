@@ -13,7 +13,7 @@ include("${VITASDK}/share/vita.cmake" REQUIRED)
 
 set(VITA_APP_NAME "ZGloomVita")
 set(VITA_TITLEID  "JETSGLOOM")
-set(VITA_VERSION  "01.02")
+set(VITA_VERSION  "02.00")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=gnu11")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fpermissive")
@@ -86,7 +86,8 @@ target_link_libraries(${PROJECT_NAME}
   SceTouch_stub
   SceHid_stub
   SceMotion_stub
-  SceLibKernel_stub 
+  SceAppUtil_stub
+  SceLibKernel_stub
 )
 
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
