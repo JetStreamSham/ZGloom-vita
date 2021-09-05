@@ -44,7 +44,7 @@ class GameLogic
 		weapontableentry wtable[5];
 		ObjectGraphics* objectgraphics;
 		std::list<MapObject> newobjects;
-
+		
 	private:
 		GloomMap* gmap;
 

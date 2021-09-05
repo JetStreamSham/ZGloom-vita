@@ -3,6 +3,7 @@
 #include "gamelogic.h"
 #include "monsterlogic.h"
 #include "hud.h"
+#include "config.h"
 
 void BaldyPunch(MapObject& o, GameLogic* logic);
 int8_t CheckColl(MapObject& o1, MapObject &o2);
@@ -1987,7 +1988,15 @@ void HealthGot(MapObject& thisobj, MapObject& otherobj, GameLogic* logic)
 	SoundHandler::Play(SoundHandler::SOUND_TOKEN);
 
 	otherobj.data.ms.hitpoints += 5;
-	if (otherobj.data.ms.hitpoints > 25) otherobj.data.ms.hitpoints = 25;
+
+	// cheatmode
+	if (Config::GetGM()) {
+			otherobj.data.ms.hitpoints = 32767;
+			} else if (otherobj.data.ms.hitpoints > 25) {
+			otherobj.data.ms.hitpoints = 25;
+			}
+	// --- original code below
+	// if (otherobj.data.ms.hitpoints > 25) otherobj.data.ms.hitpoints = 25;
 
 	otherobj.data.ms.messtimer = -127;
 	otherobj.data.ms.mess = Hud::MESSAGES_HEALTH_BONUS;

@@ -3,6 +3,10 @@
 A port of [ZGloom](https://github.com/Swizpig/ZGloom) for the PlayStation Vita.<br>
 A fork of [ZGloom-vita](https://github.com/JetStreamSham/ZGloom-vita) from [JetStreamSham](https://github.com/JetStreamSham)
 
+## What's new?
+1. [JetStreamSham](https://github.com/JetStreamSham/ZGloom-vita) added a launcher to the game to have all Gloom-Engine games available
+2. I added a cheat menu into the game menu to set invinite health, lives and maxed weapon at start
+
 ## What is Gloom?
 
 [Gloom](https://en.wikipedia.org/wiki/Gloom_(video_game)) was a 1995 Doom-clone from Black Magic Software for Commodore Amiga. It had [very messy and meaty graphics](https://www.lemonamiga.com/games/details.php?id=1781) and needed a very powerful Amiga computer back then (A1200 @ 030 was far too low). It had several official successors like Gloom Deluxe/Ultimate Gloom (a graphical enhanced Gloom), Gloom 3, Zombie Massacre and even some full-game conversion of 90's Amiga games.

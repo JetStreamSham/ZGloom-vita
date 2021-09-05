@@ -27,6 +27,12 @@ void MenuScreen::Render(SDL_Surface *src, SDL_Surface *dest, Font &font)
 	{
 		DisplayStandardMenu(displaymenu, flash, scale, dest, font);
 	}
+// cheatmode	
+	else if (status == MENUSTATUS_CHEATOPTIONS)
+	{
+		DisplayStandardMenu(cheatmenu, flash, scale, dest, font);
+	}
+// ---	
 	else if (status == MENUSTATUS_KEYCONFIG)
 	{
 		switch (selection)
@@ -69,6 +75,7 @@ MenuScreen::MenuScreen()
 	mainmenu.push_back(MenuEntry("CONTROL OPTIONS", ACTION_SWITCHMENU, MENUSTATUS_CONTROLOPTIONS, nullptr, nullptr));
 	mainmenu.push_back(MenuEntry("SOUND OPTIONS", ACTION_SWITCHMENU, MENUSTATUS_SOUNDOPTIONS, nullptr, nullptr));
 	mainmenu.push_back(MenuEntry("DISPLAY OPTIONS", ACTION_SWITCHMENU, MENUSTATUS_DISPLAYOPTIONS, nullptr, nullptr));
+	mainmenu.push_back(MenuEntry("CHEAT OPTIONS", ACTION_SWITCHMENU, MENUSTATUS_CHEATOPTIONS, nullptr, nullptr));
 	mainmenu.push_back(MenuEntry("QUIT TO TITLE", ACTION_RETURN, MENURET_QUIT, nullptr, nullptr));
 
 	soundmenu.push_back(MenuEntry("RETURN", ACTION_SWITCHMENU, MENUSTATUS_MAIN, nullptr, nullptr));
@@ -84,6 +91,14 @@ MenuScreen::MenuScreen()
 	displaymenu.push_back(MenuEntry("BLOOD SIZE: ", ACTION_INT, 5, Config::GetBlood, Config::SetBlood));
 	displaymenu.push_back(MenuEntry("FULLSCREEN: ", ACTION_BOOL, 0, Config::GetFullscreen, Config::SetFullscreen));
 	displaymenu.push_back(MenuEntry("MULTITHREAD RENDERER: ", ACTION_BOOL, 0, Config::GetMT, Config::SetMT));
+
+// cheatmode	
+	cheatmenu.push_back(MenuEntry("RETURN", ACTION_SWITCHMENU, MENUSTATUS_MAIN, nullptr, nullptr));
+	cheatmenu.push_back(MenuEntry("NEARLY INFINITE HEALTH: ", ACTION_BOOL, 0, Config::GetGM, Config::SetGM));
+//	cheatmenu.push_back(MenuEntry("MAX LIVES ARE 99: ", ACTION_BOOL, 0, Config::GetUL, Config::SetUL));
+	cheatmenu.push_back(MenuEntry("PHOTON WEAPON AT START: ", ACTION_BOOL, 0, Config::GetMW, Config::SetMW));
+// ---
+
 }
 
 void MenuScreen::HandleKeyMenu()
@@ -211,6 +226,14 @@ MenuScreen::MenuReturn MenuScreen::Update()
 		HandleStandardMenu(displaymenu);
 		break;
 	}
+
+// cheatmode
+	case MENUSTATUS_CHEATOPTIONS:
+	{
+		HandleStandardMenu(cheatmenu);
+		break;
+	}
+// ---
 
 	default:
 		break;

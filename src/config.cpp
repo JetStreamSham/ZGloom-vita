@@ -32,6 +32,9 @@ namespace Config
 	static int32_t focallength;
 	static int mousesens;
 	static bool autofire;
+	static bool godmode; // cheatmode
+	static bool unlimitedlives; // cheatmode
+	static bool maxweapon; // cheatmode
 	static int bloodsize;
 	static bool debug = false;
 	static uint32_t FPS;
@@ -360,6 +363,10 @@ namespace Config
 
 		autofire = true;
 
+		godmode = false; // cheatmode
+		unlimitedlives = false; // cheatmode
+		maxweapon = false; // cheatmode
+
 		std::ifstream file;
 
 //		file.open(selectedGame + "/config.txt"); // old code
@@ -440,6 +447,22 @@ namespace Config
 					{
 						autofire = std::stoi(line) != 0;
 					}
+
+// cheatmode
+					if (command == "godmode")
+					{
+						godmode = std::stoi(line) != 0;
+					}
+					if (command == "unlimitedlives")
+					{
+						unlimitedlives = std::stoi(line) != 0;
+					}
+					if (command == "maxweapon")
+					{
+						maxweapon = std::stoi(line) != 0;
+					}
+// ---
+
 					// if (command == "rightStickDeadzone")
 					// {
 					// 	rightStickDeadzone = std::stoi(line);
@@ -526,6 +549,34 @@ namespace Config
 		autofire = (a != 0);
 	}
 
+// cheatmode
+	int GetGM()
+	{
+		return godmode ? 1 : 0;
+	}
+	int GetUL()
+	{
+		return unlimitedlives ? 1 : 0;
+	}
+	int GetMW()
+	{
+		return maxweapon ? 1 : 0;
+	}
+
+	void SetGM(int s)
+	{
+		godmode = (s != 0);
+	}
+	void SetUL(int s)
+	{
+		unlimitedlives = (s != 0);
+	}
+	void SetMW(int s)
+	{
+		maxweapon = (s != 0);
+	}
+// ---
+
 	void SetMusicVol(int vol)
 	{
 		musvol = vol;
@@ -594,6 +645,13 @@ namespace Config
 
 			file << "\n;Rapidfire?\n";
 			file << "autofire " << (autofire ? 1 : 0) << "\n";
+
+			// cheatmode
+			file << "\n;Cheatmode?\n";
+			file << "godmode " << (godmode ? 1 : 0) << "\n";
+			file << "unlimitedlives " << (unlimitedlives ? 1 : 0) << "\n";
+			file << "maxweapon " << (maxweapon ? 1 : 0) << "\n";
+			// ---
 
 			file << "\n;RightStickDeadzone\n";
 			file << "rightStickDeadzone " << rightStickDeadzone << "\n";

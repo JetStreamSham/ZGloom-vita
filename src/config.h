@@ -62,10 +62,20 @@ namespace Config
 
 	int GetMT();
 	void SetMT(int s);
+	
 	bool GetVSync();
 
 	int GetAutoFire();
 	void SetAutoFire(int a);
+
+	// cheatmode
+	int GetGM(); // godmode
+	void SetGM(int s); // godmode
+	int GetUL(); // unlimited lives
+	void SetUL(int s); // unlimited lives
+	int GetMW(); // max weapon
+	void SetMW(int s); // max weapon
+	// ---
 
 	bool UseSticks();
 	
