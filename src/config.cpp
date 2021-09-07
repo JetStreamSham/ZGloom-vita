@@ -369,8 +369,7 @@ namespace Config
 
 		std::ifstream file;
 
-//		file.open(selectedGame + "/config.txt"); // old code
-		file.open("ux0:/data/ZGloom/config.txt");
+		file.open(selectedGame + "/config.txt");
 
 		if (file.is_open())
 		{

@@ -202,17 +202,6 @@ int main(int argc, char *argv[])
 	//	vgl_file_log("\nstring: %s", GetGamePath() .c_str());
 	//	vgl_file_log("\nstring: %s", Config::isZM.c_str());
 
-//	FILE *dbgFile = fopen("ux0:/data/ZGloom/debug.txt", "w");
-	/* AUTODETECT ZM FIRST!*/
-	if (strstr(buffer, "massacre")) {
-		if (FILE *file = fopen("ux0:/data/ZGloom/massacre/stuf/stages", "r")) // check if ZM directory is existing
-		{
-//			fputs("detected ZM", dbgFile);
-//			fclose(file);
-			Config::SetZM(true);
-		}
-	}
-
 	if (SDL_Init(SDL_INIT_TIMER | SDL_INIT_AUDIO | SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER) != 0)
 	{
 		std::cout << "SDL_Init Error: " << SDL_GetError() << std::endl;
